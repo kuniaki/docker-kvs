@@ -6,15 +6,20 @@ pipeline {
     PROD_HOST = "root@192.168.11.35"
     BUILD_TIMESTAMP = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
   }
-  stages {
-/*
-    stage('Pre Check') {
-      steps {
-        sh "test -f ~/.docker/config.json"
-        sh "cat ~/.docker/config.json | grep docker.io"
-      }
-    }
-*/
+
+
+  properties(
+    [
+        parameters([
+          string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
+          string(name: 'node', defaultValue: 'selenium-grid-node-03', description: 'Jenkins Node Name', ),
+        ])
+    ]
+  )
+
+
+ stages {
+  node(node) {
     stage('Build down') {
       steps {
         sh "cat docker-compose.build.yml"
@@ -69,4 +74,5 @@ pipeline {
       }
     }
   }
+ }
 }
