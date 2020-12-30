@@ -52,24 +52,16 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
     }
 
     stage('Build volume') {
-      steps {
         sh "docker volume prune -f"
-      }
     }
     stage('Build build') {
-      steps {
         sh "docker-compose -f docker-compose.build.yml build"
-      }
     }
     stage('Build up -d') {
-      steps {
         sh "docker-compose -f docker-compose.build.yml up -d"
-      }
     }
     stage('Build ps') {
-      steps {
         sh "docker-compose -f docker-compose.build.yml ps"
-      }
     }
 
 
