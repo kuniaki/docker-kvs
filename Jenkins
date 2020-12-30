@@ -9,7 +9,7 @@ properties(
     [
         parameters([
           string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
-          string(name: 'node', defaultValue: 'selenium-grid-node-03', description: 'Jenkins Node Name', ),
+          string(name: 'node', defaultValue: 'DockerTest2', description: 'Jenkins Node Name', ),
         ])
     ]
 )
