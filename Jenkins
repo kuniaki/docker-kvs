@@ -64,6 +64,13 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
         sh "docker-compose -f docker-compose.build.yml ps"
     }
 
+    stage('Test') {
+        sh "docker container exec dockerkvs_apptest pytest -v test_app.py"
+        sh "docker container exec dockerkvs_webtest pytest -v test_static.py"
+        sh "docker container exec dockerkvs_webtest pytest -v test_selenium.py"
+        sh "docker-compose -f docker-compose.build.yml down"
+    }
+
 
   } catch(e) {
 
