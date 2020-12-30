@@ -46,12 +46,10 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
                                branches: [[name: branch]]], poll: false
     }
 
-/*
     stage('Build down') {
         sh "cat docker-compose.build.yml"
         sh "docker-compose -f docker-compose.build.yml down"
     }
-*/
 
 
   } catch(e) {
