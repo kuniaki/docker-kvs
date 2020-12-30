@@ -29,6 +29,11 @@ node(node) {
      step([$class: 'WsCleanup'])
     }
 
+    stage('Build down') {
+        sh "cat docker-compose.build.yml"
+        sh "docker-compose -f docker-compose.build.yml down"
+    }
+
     
 
 
