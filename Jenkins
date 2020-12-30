@@ -8,7 +8,7 @@ import jenkins.model.Jenkins
 properties(
     [
         parameters([
-          string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
+          string(name: 'branch', defaultValue: 'main', description: 'branch', ),
           string(name: 'node', defaultValue: 'DockerTest2', description: 'Jenkins Node Name', ),
         ])
     ]
@@ -16,6 +16,7 @@ properties(
 
 node(node) {
 
+withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {  
 
   try {
 
@@ -29,16 +30,33 @@ node(node) {
      step([$class: 'WsCleanup'])
     }
 
+    stage('Checkout') {
+       checkout scm: [
+           $class: 'GitSCM', 
+           extensions: [[$class: 'WipeWorkspace'],
+                        [$class: 'CloneOption',
+                         depth: 0,
+                         honorRefspec: true,
+                         noTags: false,
+                         reference: '',
+                          shallow: false]],
+           userRemoteConfigs: [[url: 'git@github.com:kuniaki/docker-kvs.git',
+                               refspec: '',
+                               credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168']],
+                               branches: [[name: branch]]], poll: false
+    }
+
+/*
     stage('Build down') {
         sh "cat docker-compose.build.yml"
         sh "docker-compose -f docker-compose.build.yml down"
     }
-
-    
+*/
 
 
   } catch(e) {
 
   }
 
+ }
 }
