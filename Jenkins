@@ -10,6 +10,7 @@ properties(
         parameters([
           string(name: 'branch', defaultValue: 'main', description: 'branch', ),
           string(name: 'node', defaultValue: 'DockerTest2', description: 'Jenkins Node Name', ),
+          string(name: 'production', defaultValue: '192.168.11.35', description: 'Production', ),
         ])
     ]
 )
@@ -89,6 +90,17 @@ node(node) {
         sh "docker rmi `docker images -q`"
       }
    }
+
+   stage('Deploy') {
+      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+        sh "cat docker-compose.prod.yml"
+        sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
+        sh "echo 'BUILD_TIMESTAMP=${BUILD_TIMESTAMP}' >> .env"
+        sh "cat .env"
+        sh "docker-compose -H ssh://root${production} -f docker-compose.prod.yml up -d"
+        sh "docker-compose -H ssh://root${production} -f docker-compose.prod.yml ps"
+      }
+    }
 
 
   } catch(e) {

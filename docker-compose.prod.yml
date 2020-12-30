@@ -1,8 +1,8 @@
 version: '3.7'
 services:
   web: 
-    image: ${DOCKERHUB_USER}/dockerkvs_web:${BUILD_TIMESTAMP}
-    container_name: dockerkvs_web
+    image: ${DOCKERHUB_USER}/web:${BUILD_TIMESTAMP}
+    container_name: web
     restart: unless-stopped
     depends_on:
       - app
@@ -11,8 +11,8 @@ services:
     environment:
       APP_SERVER: http://app:80
   app:
-    image: ${DOCKERHUB_USER}/dockerkvs_app:${BUILD_TIMESTAMP}
-    container_name: dockerkvs_app
+    image: ${DOCKERHUB_USER}/app:${BUILD_TIMESTAMP}
+    container_name: app
     restart: unless-stopped
     depends_on:
       - db
