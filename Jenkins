@@ -16,8 +16,15 @@ properties(
 
 node(node) {
 
-withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {  
+ environment {
+    DOCKERHUB_USER = "kuniaki0417"
+    BUILD_HOST = "root@192.168.11.34"
+    PROD_HOST = "root@192.168.11.35"
+    BUILD_TIMESTAMP = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
+  }
 
+//withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {  
+//}
   try {
 
     stage('init') {
@@ -46,21 +53,12 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
                                branches: [[name: branch]]], poll: false
     }
 
-    stage('Build down') {
+    stage('Build') {
         sh "cat docker-compose.build.yml"
         sh "docker-compose -f docker-compose.build.yml down"
-    }
-
-    stage('Build volume') {
         sh "docker volume prune -f"
-    }
-    stage('Build build') {
         sh "docker-compose -f docker-compose.build.yml build"
-    }
-    stage('Build up -d') {
         sh "docker-compose -f docker-compose.build.yml up -d"
-    }
-    stage('Build ps') {
         sh "docker-compose -f docker-compose.build.yml ps"
     }
 
@@ -70,11 +68,23 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
         sh "docker container exec dockerkvs_webtest pytest -v test_selenium.py"
         sh "docker-compose -f docker-compose.build.yml down"
     }
+    
+   def now = new Date()
+   println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+   def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+   
+   stage('Register') {
+      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+        sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
+        sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
+        sh "docker push $USERNAME/web:$TIME_STAMP"
+        sh "docker push $USERNAME/app:$TIME_STAMP"
+      }
+    }
 
 
   } catch(e) {
 
   }
 
- }
 }
