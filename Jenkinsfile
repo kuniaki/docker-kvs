@@ -15,16 +15,33 @@ pipeline {
       }
     }
 */
-    stage('Build') {
+    stage('Build down') {
       steps {
         sh "cat docker-compose.build.yml"
         sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml down"
+      }
+    }
+    stage('Build volume') {
+      steps {
         sh "docker -H ssh://${BUILD_HOST} volume prune -f"
+      }
+    }
+    stage('Build build') {
+      steps {
         sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml build"
+      }
+    }
+    stage('Build up -d') {
+      steps {
         sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml up -d"
+      }
+    }
+    stage('Build ps') {
+      steps {
         sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml ps"
       }
     }
+
     stage('Test') {
       steps {
         sh "docker -H ssh://${BUILD_HOST} container exec dockerkvs_apptest pytest -v test_app.py"
