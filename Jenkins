@@ -87,7 +87,8 @@ node(node) {
         sh "docker rmi $USERNAME/web:$TIME_STAMP"
         sh "docker rmi $USERNAME/app:$TIME_STAMP"
         sh "docker rmi `docker images -q`"
-    }
+      }
+   }
 
 
   } catch(e) {
