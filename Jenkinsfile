@@ -1,13 +1,3 @@
-properties(
-    [
-        parameters([
-          string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
-          string(name: 'node', defaultValue: 'selenium-grid-node-03', description: 'Jenkins Node Name', ),
-        ])
-    ]
-)
-
-
 pipeline {
   agent any
   environment {
@@ -18,10 +8,7 @@ pipeline {
   }
 
 
-
-
  stages {
-  node(node) {
     stage('Build down') {
       steps {
         sh "cat docker-compose.build.yml"
@@ -76,5 +63,4 @@ pipeline {
       }
     }
   }
- }
 }
