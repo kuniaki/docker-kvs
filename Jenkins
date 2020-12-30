@@ -30,6 +30,7 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
      step([$class: 'WsCleanup'])
     }
 
+/*
     stage('Checkout') {
        checkout scm: [
            $class: 'GitSCM', 
@@ -40,11 +41,12 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
                          noTags: false,
                          reference: '',
                           shallow: false]],
-           userRemoteConfigs: [[url: 'git@github.com:kuniaki/docker-kvs.git',
+           userRemoteConfigs: [[url: 'https://github.com/kuniaki/docker-kvs.git',
                                refspec: '',
                                credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168']],
                                branches: [[name: branch]]], poll: false
     }
+*/
 
 /*
     stage('Build down') {
