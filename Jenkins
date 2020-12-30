@@ -30,7 +30,6 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
      step([$class: 'WsCleanup'])
     }
 
-/*
     stage('Checkout') {
        checkout scm: [
            $class: 'GitSCM', 
@@ -46,7 +45,6 @@ withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d44482
                                credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168']],
                                branches: [[name: branch]]], poll: false
     }
-*/
 
 /*
     stage('Build down') {
