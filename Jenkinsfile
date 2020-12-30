@@ -1,3 +1,13 @@
+properties(
+    [
+        parameters([
+          string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
+          string(name: 'node', defaultValue: 'selenium-grid-node-03', description: 'Jenkins Node Name', ),
+        ])
+    ]
+)
+
+
 pipeline {
   agent any
   environment {
@@ -8,14 +18,6 @@ pipeline {
   }
 
 
-  properties(
-    [
-        parameters([
-          string(name: 'branch', defaultValue: 'uiautomator', description: 'branch', ),
-          string(name: 'node', defaultValue: 'selenium-grid-node-03', description: 'Jenkins Node Name', ),
-        ])
-    ]
-  )
 
 
  stages {
