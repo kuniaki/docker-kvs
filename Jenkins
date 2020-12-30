@@ -82,6 +82,13 @@ node(node) {
       }
     }
 
+    stage('clear') {
+      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+        sh "docker rmi $USERNAME/web:$TIME_STAMP"
+        sh "docker rmi $USERNAME/app:$TIME_STAMP"
+        sh "docker rmi `docker images -q`"
+    }
+
 
   } catch(e) {
 
