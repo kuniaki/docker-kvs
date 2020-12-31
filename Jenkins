@@ -17,13 +17,6 @@ properties(
 
 node(node) {
 
- environment {
-    DOCKERHUB_USER = "kuniaki0417"
-    BUILD_HOST = "root@192.168.11.34"
-    PROD_HOST = "root@192.168.11.35"
-    BUILD_TIMESTAMP = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
-  }
-
 //withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {  
 //}
   try {
@@ -76,10 +69,12 @@ node(node) {
    
    stage('Register') {
       withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+        sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
         sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
         sh "docker push $USERNAME/web:$TIME_STAMP"
         sh "docker push $USERNAME/app:$TIME_STAMP"
+        sh "docker logout"
       }
     }
 
@@ -93,12 +88,14 @@ node(node) {
 
    stage('Deploy') {
       withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+        sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "cat docker-compose.prod.yml"
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
-        sh "echo 'BUILD_TIMESTAMP=${BUILD_TIMESTAMP}' >> .env"
+        sh "echo 'BUILD_TIMESTAMP=$TIME_STAMP' >> .env"
         sh "cat .env"
-        sh "docker-compose -H ssh://root${production} -f docker-compose.prod.yml up -d"
-        sh "docker-compose -H ssh://root${production} -f docker-compose.prod.yml ps"
+        sh "docker-compose -H ssh://root@192.168.11.35 -f docker-compose.prod.yml up -d"
+        sh "docker-compose -H ssh://root@192.168.11.35 -f docker-compose.prod.yml ps"
+         sh "docker logout"
       }
     }
 
