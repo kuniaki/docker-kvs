@@ -9,7 +9,7 @@ properties(
     [
         parameters([
           string(name: 'branch', defaultValue: 'main', description: 'branch', ),
-          string(name: 'node', defaultValue: 'DockerTest2', description: 'Jenkins Node Name', ),
+          string(name: 'node', defaultValue: 'Jenkins', description: 'Jenkins Node Name', ),
           string(name: 'production', defaultValue: '192.168.11.35', description: 'Production', ),
         ])
     ]
@@ -17,8 +17,6 @@ properties(
 
 node(node) {
 
-//withCredentials([usernamePassword(credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {  
-//}
   try {
 
     stage('init') {
@@ -43,7 +41,7 @@ node(node) {
                           shallow: false]],
            userRemoteConfigs: [[url: 'https://github.com/kuniaki/docker-kvs.git',
                                refspec: '',
-                               credentialsId: '89fe8fc8-8b79-45d2-ba93-d444823bc168']],
+                               credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
                                branches: [[name: branch]]], poll: false
     }
 
@@ -68,7 +66,7 @@ node(node) {
    def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
    
    stage('Register') {
-      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
         sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
@@ -79,7 +77,7 @@ node(node) {
     }
 
     stage('clear') {
-      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh "docker rmi $USERNAME/web:$TIME_STAMP"
         sh "docker rmi $USERNAME/app:$TIME_STAMP"
         sh "docker rmi `docker images -q`"
@@ -87,7 +85,7 @@ node(node) {
    }
 
    stage('Deploy') {
-      withCredentials([usernamePassword(credentialsId: '7590528a-50ac-4cb7-958b-54be5c0ffbb6', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "cat docker-compose.prod.yml"
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
