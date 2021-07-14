@@ -8,8 +8,7 @@ import jenkins.model.Jenkins
 properties(
     [
         parameters([
-          string(name: 'branch', defaultValue: 'main', description: 'branch', ),
-          string(name: 'node', defaultValue: 'DockerTest12', description: 'Jenkins Node Name', ),
+          string(name: 'branch', defaultValue: 'main', description: 'branch', ), string(name: 'node', defaultValue: 'DockerTest12', description: 'Jenkins Node Name', ),
           string(name: 'production', defaultValue: '192.168.11.35', description: 'Production', ),
         ])
     ]
@@ -55,10 +54,16 @@ node(node) {
     }
 
     stage('Test') {
-        sh "docker container exec dockerkvs_apptest pytest -v test_app.py"
-        sh "docker container exec dockerkvs_webtest pytest -v test_static.py"
-        sh "docker container exec dockerkvs_webtest pytest -v test_selenium.py"
-        sh "docker-compose -f docker-compose.build.yml down"
+
+     sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
+      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
+      junit 'apptest.xml'
+
+      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+      junit 'uitest.xml'
+      
+      sh "docker-compose -f docker-compose.build.yml down"
     }
     
    def now = new Date()
