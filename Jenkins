@@ -103,15 +103,15 @@ node(node) {
      stopContainer() 
      deleteImages() 
   }
+}
 
-  def stopContainer() {
+def stopContainer() {
     sh "docker-compose -f docker-compose.build.yml down"
-  }
+}
 
-  def deleteImages() {
+def deleteImages() {
     sh "docker rmi $USERNAME/web:$TIME_STAMP"
     sh "docker rmi $USERNAME/app:$TIME_STAMP"
     sh "docker rmi `docker images -q`"
-  }
-
 }
+
