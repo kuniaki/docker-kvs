@@ -63,7 +63,7 @@ node(node) {
       sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
       junit 'uitest.xml'
       
-      sh "docker-compose -f docker-compose.build.yml down"
+     stopContainer() 
     }
     
    def now = new Date()
@@ -82,11 +82,7 @@ node(node) {
     }
 
     stage('clear') {
-      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
-        sh "docker rmi $USERNAME/web:$TIME_STAMP"
-        sh "docker rmi $USERNAME/app:$TIME_STAMP"
-        sh "docker rmi `docker images -q`"
-      }
+     deleteImages() 
    }
 
    stage('Deploy') {
@@ -104,7 +100,16 @@ node(node) {
 
 
   } catch(e) {
-
+     stopContainer() 
+     deleteImages() 
   }
 
+def stopContainer() {
+    sh "docker-compose -f docker-compose.build.yml down"
+}
+
+def deleteImages() {
+    sh "docker rmi $USERNAME/web:$TIME_STAMP"
+    sh "docker rmi $USERNAME/app:$TIME_STAMP"
+    sh "docker rmi `docker images -q`"
 }
