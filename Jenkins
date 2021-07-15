@@ -15,8 +15,7 @@ properties(
 )
 
 
-def now = new Date()
-println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+def now = new Date() println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
 
 
@@ -88,7 +87,7 @@ node(node) {
     }
 
     stage('clear') {
-     deleteImages() 
+     deleteImages(TIME_STAMP) 
    }
 
    stage('Deploy') {
@@ -107,7 +106,7 @@ node(node) {
 
   } catch(e) {
      stopContainer() 
-     deleteImages() 
+     deleteImages(TIME_STAMP) 
   }
 }
 
@@ -115,10 +114,10 @@ def stopContainer() {
     sh "docker-compose -f docker-compose.build.yml down"
 }
 
-def deleteImages() {
+def deleteImages(TIME_STAMP) {
 withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-    sh "docker rmi $USERNAME/web:$TIME_STAMP"
-    sh "docker rmi $USERNAME/app:$TIME_STAMP"
+    sh "docker rmi $USERNAME/web:${TIME_STAMP}"
+    sh "docker rmi $USERNAME/app:${TIME_STAMP}"
     sh "docker rmi `docker images -q`"
   }
 }
