@@ -15,7 +15,7 @@ properties(
 )
 
 
-def now = new Date() println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+def now = new Date()
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
 
 
