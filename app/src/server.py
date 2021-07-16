@@ -56,7 +56,7 @@ def isalnum(text):
   return re.match(r'^[a-zA-Z0-9]+$', text) is not None
 
 def success(d):
-  return (jsonify(d), 300)
+  return (jsonify(d), 200)
 
 def error(code):
   message = {
