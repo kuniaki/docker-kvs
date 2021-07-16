@@ -243,7 +243,7 @@ def test_delete_success():
     take_screenshot(driver, sys._getframe().f_code.co_name)
     assert elems['request-url'].text   == '/api/v1/keys/apple'
     assert elems['request-body'].text  == ''
-    assert elems['response-code'].text == '100'
+    assert elems['response-code'].text == '200'
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {}
     driver.quit()
