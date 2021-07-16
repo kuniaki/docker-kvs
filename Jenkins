@@ -59,16 +59,20 @@ node(node) {
     }
 
     stage('Test') {
-
-     sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
-      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
-      junit 'apptest.xml'
-
-      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-      junit 'uitest.xml'
-      
+    sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
+     test_stage = '1'
+     sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
+     test_stage = '2'
+     junit 'apptest.xml'
+     test_stage = '3'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+     test_stage = '4'
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     test_stage = '5'
+     junit 'uitest.xml'
+     test_stage = '6'
      stopContainer() 
+     test_stage = '7'
     }
     
    now = new Date()
@@ -105,6 +109,11 @@ node(node) {
 
 
   } catch(e) {
+     test_stage = testReport(test_stage)
+     if("${test_stage}" == '3') {
+         test_stage = testReport(test_stage)
+     }
+     
      stopContainer() 
      deleteImages(TIME_STAMP) 
   }
@@ -116,9 +125,50 @@ def stopContainer() {
 
 def deleteImages(TIME_STAMP) {
 withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-    sh "docker rmi $USERNAME/web:${TIME_STAMP}"
-    sh "docker rmi $USERNAME/app:${TIME_STAMP}"
-    sh "docker rmi `docker images -q`"
+  sh 'docker rmi $(docker images -a -q)'
   }
+}
+
+
+def testReport(index) {
+    
+ def test_stage = '0'
+    
+ try
+ {
+    if("${index}" == '0') {
+     test_stage = '1'
+     sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
+     test_stage = '2'
+     junit 'apptest.xml'
+     test_stage = '3'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+     test_stage = '4'
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     test_stage = '5'
+     junit 'uitest.xml'
+     test_stage = '6'
+     stopContainer() 
+     test_stage = '7'
+     return "${test_stage}" 
+    }
+    
+    if("${index}" == '3') {
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     test_stage = '5'
+     junit 'uitest.xml'
+     test_stage = '6'
+     stopContainer() 
+     test_stage = '7'   
+     return test_stage
+    }
+    
+    
+  } 
+  catch(e) 
+  {
+      return test_stage
+  }
+  
 }
 
