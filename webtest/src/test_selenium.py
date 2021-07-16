@@ -249,7 +249,7 @@ def test_delete_success():
     driver.quit()
   except:
     driver.quit()
-    raise
+#   raise
 
 def test_delete_fail_nokey():
   clean_and_add_keys()
