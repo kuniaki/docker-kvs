@@ -136,7 +136,7 @@ withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b12
       sh "docker rmi $USERNAME/web:${TIME_STAMP}"
       sh "docker rmi $USERNAME/app:${TIME_STAMP}"
       sh "docker rmi `docker images -q`"
-      sh 'docker rmi $(docker images -a -q)'
+      sh "docker rmi $(docker images -a -q)"
   }
 }
 
