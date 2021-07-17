@@ -129,6 +129,7 @@ node(node) {
 
 def stopContainer() {
     sh "docker-compose -f docker-compose.build.yml down"
+    sleep 10
 }
 
 def deleteImages(TIME_STAMP) {
