@@ -17,7 +17,7 @@ properties(
 
 def now = new Date()
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
-def test_stage = '0'
+def test_stage = '1'
 
 
 node(node) {
@@ -62,25 +62,15 @@ node(node) {
     stage('Test') {
 
      sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
-     test_stage = '1'
      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
-     test_stage = '2'
      junit 'apptest.xml'
-     test_stage = '3'
+     test_stage = '2'
      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-     test_stage = '4'
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-     test_stage = '5'
      junit 'uitest.xml'
-     test_stage = '6'
      stopContainer() 
-     test_stage = '7'
     }
     
-   now = new Date()
-   println now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
-   TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
-   
    stage('Register') {
       withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh 'docker login -u $USERNAME -p $PASSWORD'
@@ -118,7 +108,7 @@ node(node) {
      echo "Catch Error 2"
      echo "${test_stage}"
      
-     if("${test_stage}" == '3') {
+     if("${test_stage}" == '1') {
          test_stage = testReport(test_stage)
      }
      
@@ -129,7 +119,6 @@ node(node) {
 
 def stopContainer() {
     sh "docker-compose -f docker-compose.build.yml down"
-    sleep 10
 }
 
 def deleteImages(TIME_STAMP) {
@@ -149,24 +138,19 @@ def testReport(index) {
     
  try
  {
-    if("${index}" == '0') {
+    if("${index}" == '1') {
     
     echo "testReport Function 1"
     echo "${index}" 
         
-     test_stage = '1'
      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
-     test_stage = '2'
      junit 'apptest.xml'
-     test_stage = '3'
+     test_stage = '2'
      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-     test_stage = '4'
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-     test_stage = '5'
      junit 'uitest.xml'
-     test_stage = '6'
      stopContainer() 
-     test_stage = '7'
+     test_stage = '3'
      
     echo "testReport Function 2"
     echo "${test_stage}"
@@ -176,13 +160,11 @@ def testReport(index) {
     }
     
     
-    if("${index}" == '3') {
+    if("${index}" == '2') {
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-     test_stage = '5'
      junit 'uitest.xml'
-     test_stage = '6'
      stopContainer() 
-     test_stage = '7'   
+     test_stage = '3'   
      
      return test_stage
         
@@ -194,6 +176,7 @@ def testReport(index) {
   {
       echo "Catch Error 1"
       echo "${test_stage}"
+      testReport(test_stage) 
       return test_stage
   }
   

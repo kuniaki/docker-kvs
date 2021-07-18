@@ -17,8 +17,8 @@ APIURL = WEBURL + 'api/v1'
 ##################
 
 def test_get_success_nokey():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['get-button'].click()
     time.sleep(1)
@@ -30,13 +30,13 @@ def test_get_success_nokey():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {'apple':'red', 'banana':'yellow'}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
   
 def test_get_success_keyexist():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('apple')
     elems['get-button'].click()
@@ -48,13 +48,13 @@ def test_get_success_keyexist():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {'apple':'red'}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_get_fail_keynotexist():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('grape')
     elems['get-button'].click()
@@ -66,9 +66,9 @@ def test_get_fail_keynotexist():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 404
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 
 ###################
@@ -76,8 +76,8 @@ def test_get_fail_keynotexist():
 ###################
 
 def test_post_success():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('grape')
     elems['value'].send_keys('purple')
@@ -90,13 +90,13 @@ def test_post_success():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {'grape':'purple'}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_post_fail_nokey():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['value'].send_keys('purple')
     elems['post-button'].click()
@@ -108,13 +108,13 @@ def test_post_fail_nokey():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 405
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_post_fail_novalue():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('grape')
     elems['post-button'].click()
@@ -126,13 +126,13 @@ def test_post_fail_novalue():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 400
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_post_fail_keyexist():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('apple')
     elems['value'].send_keys('green')
@@ -145,9 +145,9 @@ def test_post_fail_keyexist():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 409
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 
 ##################
@@ -155,8 +155,8 @@ def test_post_fail_keyexist():
 ##################
 
 def test_put_success_create():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('grape')
     elems['value'].send_keys('purple')
@@ -169,13 +169,13 @@ def test_put_success_create():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {'grape':'purple'}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_put_success_update():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('apple')
     elems['value'].send_keys('green')
@@ -188,13 +188,13 @@ def test_put_success_update():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {'apple':'green'}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_put_fail_nokey():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['value'].send_keys('purple')
     elems['put-button'].click()
@@ -206,13 +206,13 @@ def test_put_fail_nokey():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 405
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_put_fail_novalue():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('grape')
     elems['put-button'].click()
@@ -224,9 +224,9 @@ def test_put_fail_novalue():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 400
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 
 #####################
@@ -234,8 +234,8 @@ def test_put_fail_novalue():
 #####################
 
 def test_delete_success():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('apple')
     elems['delete-button'].click()
@@ -247,13 +247,13 @@ def test_delete_success():
     rbody = json.loads(elems['response-body'].text)
     assert rbody == {}
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_delete_fail_nokey():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['delete-button'].click()
     time.sleep(1)
@@ -264,13 +264,13 @@ def test_delete_fail_nokey():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 405
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 def test_delete_fail_keynotexist():
-    clean_and_add_keys()
-##try:
+  clean_and_add_keys()
+  try:
     (driver, elems) = get_driver_elements()
     elems['key'].send_keys('purple')
     elems['delete-button'].click()
@@ -282,9 +282,9 @@ def test_delete_fail_keynotexist():
     rbody = json.loads(elems['response-body'].text)
     assert rbody['code'] == 404
     driver.quit()
-##except:
-##  driver.quit()
-#   raise
+  except:
+    driver.quit()
+    raise
 
 ###############
 ### Utility ###
