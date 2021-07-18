@@ -68,6 +68,10 @@ node(node) {
      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
      junit 'uitest.xml'
+    
+    //post screenshot
+     screenshot()
+     
      stopContainer() 
     }
     
@@ -112,6 +116,8 @@ node(node) {
          test_stage = testReport(test_stage)
      }
      
+     screenshot()
+     
      stopContainer() 
      deleteImages(TIME_STAMP) 
   }
@@ -128,6 +134,12 @@ withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b12
       sh "docker rmi `docker images -q`"
 //    sh "docker rmi $(docker images -a -q)"
   }
+}
+
+def screenshot() {
+    sh "docker exec dockerkvs_webtest ls -l /images"
+    sh "docker cp dockerkvs_webtest:/images ."
+    archiveArtifacts 'images/*'
 }
 
 def testReport(index) {
@@ -181,4 +193,3 @@ def testReport(index) {
   }
   
 }
-
