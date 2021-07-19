@@ -141,8 +141,17 @@ def stopContainer() {
 
 def deleteImages(TIME_STAMP) {
 withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+  try {
       sh "docker rmi $USERNAME/web:${TIME_STAMP}"
+  }catch(e) {
+      echo " web image is already deleted" 
+  }
+
+  try {
       sh "docker rmi $USERNAME/app:${TIME_STAMP}"
+  } catch(e) {
+      echo " app image is already deleted" 
+  }
       sh "docker rmi `docker images -q`"
 //    sh "docker rmi $(docker images -a -q)"
   }
