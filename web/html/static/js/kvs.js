@@ -37,7 +37,7 @@ $(function(){
       success:function(j, status, xhr){
         $('#response-body').text(JSON.stringify(j, null, '  '))
         $('#response-code').text(xhr.status)
-        refreshTable()
+//      refreshTable()
       }, 
       error:function(d){
         $('#response-body').text(d.responseText)
