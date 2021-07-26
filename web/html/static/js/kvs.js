@@ -64,9 +64,9 @@ $(function(){
   $('#delete-button').click(function(){
     $.ajax({type:'delete', url:'/api/v1/keys/'+$('#key').val(),
       success:function(j, status, xhr){
-        $('#response-body').text(JSON.stringify(j, null, '  '))
-        $('#response-code').text(xhr.status)
-        refreshTable()
+//      $('#response-body').text(JSON.stringify(j, null, '  '))
+//      $('#response-code').text(xhr.status)
+//      refreshTable()
       }, 
       error:function(d){
         $('#response-body').text(d.responseText)
