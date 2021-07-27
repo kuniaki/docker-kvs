@@ -16,6 +16,7 @@ services:
   webtest:
     build:
       context: ./webtest
+      network: host
       dockerfile: Dockerfile
     image: dockerkvs_webtest  
     container_name: dockerkvs_webtest
@@ -33,6 +34,7 @@ services:
   apptest:
     build:
       context: ./apptest
+      network: host
       dockerfile: Dockerfile
     image: dockerkvs_apptest
     container_name: dockerkvs_apptest
@@ -46,6 +48,7 @@ services:
   web: 
     build:
       context: ./web
+      network: host
       dockerfile: Dockerfile
     image: dockerkvs_web
     container_name: dockerkvs_web
@@ -60,6 +63,7 @@ services:
   app:
     build:
       context: ./app
+      network: host
       dockerfile: Dockerfile
     image: dockerkvs_app
     container_name: dockerkvs_app
