@@ -34,6 +34,7 @@ services:
   apptest:
     build:
       context: ./apptest
+      network: host
       dockerfile: Dockerfile
     image: dockerkvs_apptest
     container_name: dockerkvs_apptest
