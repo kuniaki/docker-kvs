@@ -1,5 +1,5 @@
 From python:3.7.5-slim
-RUN pip install flask 
+RUN pip install flask==3.7.2
 RUN pip install redis==3.3.8
 WORKDIR /src
 COPY ./src/server.py /src/
