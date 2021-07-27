@@ -1,5 +1,5 @@
 From python:3.7.5-slim
-RUN pip install flask==2.0.0 redis==3.3.8
+RUN pip install flask redis==3.3.8
 WORKDIR /src
 COPY ./src/server.py /src/
 ENV PORT 80
