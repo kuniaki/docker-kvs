@@ -77,7 +77,7 @@ node(node) {
      junit 'uitest.xml'
     
     //post screenshot
-     screenshot()
+ //    screenshot()
      
      stopContainer() 
     }
