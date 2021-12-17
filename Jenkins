@@ -84,7 +84,7 @@ node(node) {
     
     //Upload Application images to Docker Hubs 
    stage('Register') {
-      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
         sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
@@ -101,7 +101,7 @@ node(node) {
 
    //Deploy the application images onto production
    stage('Deploy') {
-      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "cat docker-compose.prod.yml"
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
@@ -143,7 +143,7 @@ def stopContainer() {
 }
 
 def deleteImages(TIME_STAMP) {
-withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
   try {
       sh "docker rmi -f $USERNAME/web:${TIME_STAMP}"
   }catch(e) {
