@@ -8,8 +8,8 @@ import jenkins.model.Jenkins
 properties(
     [
         parameters([
-          string(name: 'branch', defaultValue: 'main', description: 'branch', ), string(name: 'node', defaultValue: 'DockerTest12', description: 'Jenkins Node Name', ),
-          string(name: 'production', defaultValue: '192.168.11.35', description: 'Production', ),
+          string(name: 'branch', defaultValue: 'main', description: 'branch', ), string(name: 'node', defaultValue: 'Slave1', description: 'Jenkins Node Name', ),
+          string(name: 'production', defaultValue: 'asahitestapp.eastus.cloudapp.azure.com', description: 'Production', ),
         ])
     ]
 )
