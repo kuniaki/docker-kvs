@@ -107,6 +107,7 @@ node(node) {
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
         sh "echo 'BUILD_TIMESTAMP=$TIME_STAMP' >> .env"
         sh "cat .env"
+        sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml down"
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml up -d"
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml ps"
          sh "docker logout"
