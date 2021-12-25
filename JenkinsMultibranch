@@ -24,6 +24,7 @@ pipeline {
             }
         }
 
+/*
         stage('Code Checkout') {
             steps {
                 checkout([
@@ -33,5 +34,6 @@ pipeline {
                 ])
             }
         }
+*/
 
 }
