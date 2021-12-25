@@ -7,6 +7,7 @@ pipeline {
     BUILD_TIMESTAMP = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
   }
 
+  //test
 
  stages {
     stage('Build down') {
