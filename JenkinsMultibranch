@@ -5,15 +5,6 @@ import hudson.util.DescribableList
 import hudson.slaves.EnvironmentVariablesNodeProperty
 import jenkins.model.Jenkins
 
-properties(
-    [
-        parameters([
-          string(name: 'branch', defaultValue: 'main', description: 'branch', ), string(name: 'node', defaultValue: 'Slave1', description: 'Jenkins Node Name', ),
-          string(name: 'production', defaultValue: 'asahitestapp.eastus.cloudapp.azure.com', description: 'Production', ),
-        ])
-    ]
-)
-
 
 def now = new Date()
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
