@@ -45,9 +45,13 @@ node('Slave1') {
        println "Target branch ${env.CHANGE_TARGET}"
        branch = env.BRANCH_NAME
 
+       if(env.CHANGE_BRANCH) {
+         branch = env.CHANGE_BRANCH
+       }
+
        checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "${env.CHANGE_BRANCH}"]],
+                    branches: [[name: branch]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: []
                     .plus(env.CHANGE_TARGET == null ? [] : [
