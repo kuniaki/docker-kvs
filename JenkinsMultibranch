@@ -39,6 +39,7 @@ node(node) {
     stage('Checkout') {
 
        println "Current branch ${env.BRANCH_NAME}"
+       println "Current branch ${env.CHANGE_NAME}"
        branch = env.BRANCH_NAME
 
        checkout([
