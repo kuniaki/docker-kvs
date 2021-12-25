@@ -75,10 +75,10 @@ node(node) {
      junit 'apptest.xml'
 
      //UI Automation Test
-//   test_stage = '2'
-//   sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-//  sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-//   junit 'uitest.xml'
+     test_stage = '2'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     junit 'uitest.xml'
 
     //post screenshot
  //    screenshot()
