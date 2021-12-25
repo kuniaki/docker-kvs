@@ -43,6 +43,7 @@ node(node) {
 
        checkout scm: [
            $class: 'GitSCM',
+           branches: [[name: "${env.CHANGE_BRANCH}"]],
            extensions: [[$class: 'WipeWorkspace'],
                         [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
                          depth: 0,
@@ -55,7 +56,7 @@ node(node) {
                                credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
                                ].plus(env.CHANGE_TARGET == null ? [] : [
                         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
-                    ]], poll: false
+                    ]]
     }
 
     //Build Source code and Deploy to the test machine
