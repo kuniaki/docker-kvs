@@ -1,7 +1,8 @@
+
 node('Slave1') {
 
   stage('init') (
-   step([$class: 'WsCleanup'])
+    cleanWs()
   }
 
   stage('checkout') (
