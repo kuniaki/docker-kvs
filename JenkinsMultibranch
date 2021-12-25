@@ -19,8 +19,10 @@ def now = new Date()
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
 def test_stage = '1'
 
+def production = 'asahitestapp.eastus.cloudapp.azure.com'
 
-node(node) {
+
+node('Slave1') {
 
   try {
 
@@ -39,21 +41,42 @@ node(node) {
     stage('Checkout') {
 
        println "Current branch ${env.BRANCH_NAME}"
+       println "Change branch ${env.CHANGE_BRANCH}"
+       println "Target branch ${env.CHANGE_TARGET}"
        branch = env.BRANCH_NAME
 
-       checkout scm: [
-           $class: 'GitSCM',
-           extensions: [[$class: 'WipeWorkspace'],
-                        [$class: 'CloneOption',
-                         depth: 0,
-                         honorRefspec: true,
-                         noTags: false,
-                         reference: '',
-                          shallow: false]],
-           userRemoteConfigs: [[url: 'https://github.com/kuniaki/docker-kvs.git',
-                               refspec: '',
-                               credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
-                               branches: [[name: branch]]], poll: false
+       if(env.CHANGE_BRANCH) {
+         branch = env.CHANGE_BRANCH
+       }
+
+       checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: branch]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: []
+                    .plus(env.CHANGE_TARGET == null ? [] : [
+                        [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
+                    ]),
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[name: 'origin', url: 'https://github.com/kuniaki/docker-kvs.git',credentialsId: '9607f15b-ab8b-478a-8f88-c6fb7e651541']]
+       ])
+
+//     checkout scm: [
+//         $class: 'GitSCM',
+ //        branches: [[name: "${env.CHANGE_BRANCH}"]],
+  //       extensions: [[$class: 'WipeWorkspace'],
+   //                   [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
+    //                   depth: 0,
+     //                  honorRefspec: true,
+      //                 noTags: false,
+       //                reference: '',
+        //                shallow: false]],
+         //userRemoteConfigs: [[name: 'origin',url: 'https://github.com/kuniaki/docker-kvs.git',
+          //                   refspec: '',
+           //                  credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
+            //                 ].plus(env.CHANGE_TARGET == null ? [] : [
+             //         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
+              //    ]]
     }
 
     //Build Source code and Deploy to the test machine
@@ -75,10 +98,10 @@ node(node) {
      junit 'apptest.xml'
 
      //UI Automation Test
-//   test_stage = '2'
-//   sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-//  sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-//   junit 'uitest.xml'
+     test_stage = '2'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     junit 'uitest.xml'
 
     //post screenshot
  //    screenshot()
