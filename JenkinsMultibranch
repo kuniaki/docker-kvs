@@ -39,12 +39,13 @@ node(node) {
     stage('Checkout') {
 
        println "Current branch ${env.BRANCH_NAME}"
-       println "Current branch ${env.CHANGE_NAME}"
+       println "Change branch ${env.CHANGE_NAME}"
+       println "Target branch ${env.CHANGE_TARGET}"
        branch = env.BRANCH_NAME
 
        checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "${env.CHANGE_BRANCH}"]],
+                    branches: [[name: "${env.BRANCH_NAME}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: []
                     .plus(env.CHANGE_TARGET == null ? [] : [
