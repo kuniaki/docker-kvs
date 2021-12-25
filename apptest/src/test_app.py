@@ -26,7 +26,6 @@ from requests import get, post, put, delete
 
 APP_HOST = os.environ['APP_HOST']
 APP_PORT = int(os.environ['APP_PORT'])
-BASEURL = 'http://{}:{}'.format(WEB_HOST, WEB_PORT)
 BASEURL = f'http://{APP_HOST}:{APP_PORT}/api/v1'
 
 ################
@@ -81,7 +80,9 @@ def test_js_mykvs():
   assert r.status_code == 200
 
 
-BASEURL = f'http://{APP_HOST}:{APP_PORT}/api/v1'
+APP_HOST = os.environ['APP_HOST']
+APP_PORT = int(os.environ['APP_PORT'])
+BASEURL = 'http://{}:{}'.format(APP_HOST, APP_PORT)
 ##########
 ## KEYS ##
 ##########
