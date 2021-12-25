@@ -23,13 +23,42 @@ def test_stage = '1'
 
 node(node) {
 
-  stage('init') (
-    cleanWs()
-  }
+    //Clean up Build machine Workspace
+    stage('init') {
+       sh '''
+       git config --global user.name kuniaki
+       git config --global user.email kuniaki.kudo@gmail.com
+       '''
 
-  stage('checkout') (
-    checkout scm
-    sh 'echo $BRANCH_NAME'
+     //Clean up WORKSPACE
+     step([$class: 'WsCleanup'])
+    }
+
+   //Get Source Code
+    stage('Checkout') {
+
+      sh 'echo $BRANCH_NAME'
+
+       branch = $BRANCH_NAME
+       checkout scm: [
+           $class: 'GitSCM',
+           extensions: [[$class: 'WipeWorkspace'],
+                        [$class: 'CloneOption',
+                         depth: 0,
+                         honorRefspec: true,
+                         noTags: false,
+                         reference: '',
+                          shallow: false]],
+           userRemoteConfigs: [[url: 'https://github.com/kuniaki/docker-kvs.git',
+                               refspec: '',
+                               credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
+                               branches: [[name: branch]]], poll: false
+    }
+
+
+    stage('checkout') {
+ //   checkout scm
+      sh 'echo $BRANCH_NAME'
 
     if (env.BRANCH_NAME == 'master') {
        stage 'Only on master'
@@ -38,6 +67,5 @@ node(node) {
        stage 'Other branches'
        println "Current branch ${env.BRANCH_NAME}"
     }
- )
-}
+ }
 }
