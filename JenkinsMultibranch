@@ -50,7 +50,7 @@ node(node) {
                         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
                     ]),
                     submoduleCfg: [],
-                    userRemoteConfigs: [[name: 'origin', url: 'git@github.com:example/something',credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']]
+                    userRemoteConfigs: [[name: 'origin', url: 'git@github.com:example/something',credentialsId: '9607f15b-ab8b-478a-8f88-c6fb7e651541']]
        ])
 
 //     checkout scm: [
