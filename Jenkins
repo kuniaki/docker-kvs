@@ -24,7 +24,7 @@ node(node) {
 
   try {
 
-    //Clean up Build machine Workspace 
+    //Clean up Build machine Workspace
     stage('init') {
        sh '''
        git config --global user.name kuniaki
@@ -38,7 +38,7 @@ node(node) {
     //Get Source Code
     stage('Checkout') {
        checkout scm: [
-           $class: 'GitSCM', 
+           $class: 'GitSCM',
            extensions: [[$class: 'WipeWorkspace'],
                         [$class: 'CloneOption',
                          depth: 0,
@@ -52,7 +52,7 @@ node(node) {
                                branches: [[name: branch]]], poll: false
     }
 
-    //Build Source code and Deploy to the test machine 
+    //Build Source code and Deploy to the test machine
     stage('Build') {
         sh "cat docker-compose.build.yml"
         sh "docker-compose -f docker-compose.build.yml down"
@@ -69,22 +69,22 @@ node(node) {
      sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
      junit 'apptest.xml'
-     
+
      //UI Automation Test
      test_stage = '2'
      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
      junit 'uitest.xml'
-    
+
     //post screenshot
  //    screenshot()
-     
-     stopContainer() 
+
+     stopContainer()
     }
-    
-    //Upload Application images to Docker Hubs 
+
+    //Upload Application images to Docker Hubs
    stage('Register') {
-      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
         sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
@@ -96,12 +96,12 @@ node(node) {
 
    //Clean up Test machine
     stage('clear') {
-     deleteImages(TIME_STAMP) 
+     deleteImages(TIME_STAMP)
    }
 
    //Deploy the application images onto production
    stage('Deploy') {
-      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) { 
+      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "cat docker-compose.prod.yml"
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
@@ -112,7 +112,6 @@ node(node) {
         sh "docker -H ssh://testapp@$production rm -f web"
         sh "docker -H ssh://testapp@$production rm -f app"
         sh "docker -H ssh://testapp@$production rm -f dockerkvs_db"
-         
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml up -d"
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml ps"
         sh "docker logout"
@@ -124,23 +123,23 @@ node(node) {
      echo "Catch Error"
      echo "${test_stage}"
      test_stage = testReport(test_stage)
-     
+
      echo "Catch Error 2"
      echo "${test_stage}"
-     
+
      if("${test_stage}" == '1') {
          test_stage = testReport(test_stage)
      }
-     
+
     if("${test_stage}" == '2') {
          test_stage = testReport(test_stage)
      }
 
-     
+
      screenshot()
-     
-     stopContainer() 
-     deleteImages(TIME_STAMP) 
+
+     stopContainer()
+     deleteImages(TIME_STAMP)
   }
 }
 
@@ -153,20 +152,18 @@ withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a
   try {
       sh "docker rmi -f $USERNAME/web:${TIME_STAMP}"
   }catch(e) {
-      echo " web image is already deleted" 
+      echo " web image is already deleted"
   }
 
   try {
       sh "docker rmi $USERNAME/app:${TIME_STAMP}"
   } catch(e) {
-      echo " app image is already deleted" 
+      echo " app image is already deleted"
   }
       sh "docker rmi -f `docker images -q`"
 //    sh "docker rmi -f $(docker images -a -q)"
   }
 }
-
-
 def screenshot() {
     sh "docker exec dockerkvs_webtest ls -l /images"
     sh "docker cp dockerkvs_webtest:/images ."
@@ -174,50 +171,50 @@ def screenshot() {
 }
 
 def testReport(index) {
-    
+
  echo "testReport Function 0"
  echo "${index}"
  def test_stage = '0'
-    
+
  try
  {
     if("${index}" == '1') {
-    
+
     echo "testReport Function 1"
-    echo "${index}" 
-        
+    echo "${index}"
+
      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
      junit 'apptest.xml'
      test_stage = '2'
      sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
      junit 'uitest.xml'
-     stopContainer() 
+     stopContainer()
      test_stage = '3'
-     
+
     echo "testReport Function 2"
     echo "${test_stage}"
-    echo test_Stage 
-     
-     return test_stage 
+    echo test_Stage
+
+     return test_stage
     }
-    
-    
+
+
     if("${index}" == '2') {
      sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
      junit 'uitest.xml'
-     test_stage = '3'   
-     
+     test_stage = '3'
+
      return test_stage
-        
+
     }
-    
-    
-  } 
-  catch(e) 
+
+
+  }
+  catch(e)
   {
       echo "Catch Error in testRecord function"
       return test_stage
   }
-  
+
 }
