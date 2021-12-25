@@ -41,22 +41,34 @@ node(node) {
        println "Current branch ${env.BRANCH_NAME}"
        branch = env.BRANCH_NAME
 
-       checkout scm: [
-           $class: 'GitSCM',
-           branches: [[name: "${env.CHANGE_BRANCH}"]],
-           extensions: [[$class: 'WipeWorkspace'],
-                        [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
-                         depth: 0,
-                         honorRefspec: true,
-                         noTags: false,
-                         reference: '',
-                          shallow: false]],
-           userRemoteConfigs: [[name: 'origin',url: 'https://github.com/kuniaki/docker-kvs.git',
-                               refspec: '',
-                               credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
-                               ].plus(env.CHANGE_TARGET == null ? [] : [
+              checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "${env.CHANGE_BRANCH}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: []
+                    .plus(env.CHANGE_TARGET == null ? [] : [
                         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
-                    ]]
+                    ]),
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[name: 'origin', url: 'git@github.com:example/something']]
+                ])
+
+//     checkout scm: [
+//         $class: 'GitSCM',
+ //        branches: [[name: "${env.CHANGE_BRANCH}"]],
+  //       extensions: [[$class: 'WipeWorkspace'],
+   //                   [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
+    //                   depth: 0,
+     //                  honorRefspec: true,
+      //                 noTags: false,
+       //                reference: '',
+        //                shallow: false]],
+         //userRemoteConfigs: [[name: 'origin',url: 'https://github.com/kuniaki/docker-kvs.git',
+          //                   refspec: '',
+           //                  credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
+            //                 ].plus(env.CHANGE_TARGET == null ? [] : [
+             //         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
+              //    ]]
     }
 
     //Build Source code and Deploy to the test machine
