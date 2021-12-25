@@ -37,9 +37,8 @@ node(node) {
    //Get Source Code
     stage('Checkout') {
 
-      sh 'echo $BRANCH_NAME'
 
-       branch = $BRANCH_NAME
+       branch = ${env.BRANCH_NAME}
        checkout scm: [
            $class: 'GitSCM',
            extensions: [[$class: 'WipeWorkspace'],
@@ -58,7 +57,6 @@ node(node) {
 
     stage('checkout') {
  //   checkout scm
-      sh 'echo $BRANCH_NAME'
 
     if (env.BRANCH_NAME == 'master') {
        stage 'Only on master'
