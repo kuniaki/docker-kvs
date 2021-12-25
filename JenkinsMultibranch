@@ -44,16 +44,18 @@ node(node) {
        checkout scm: [
            $class: 'GitSCM',
            extensions: [[$class: 'WipeWorkspace'],
-                        [$class: 'CloneOption',
+                        [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
                          depth: 0,
                          honorRefspec: true,
                          noTags: false,
                          reference: '',
                           shallow: false]],
-           userRemoteConfigs: [[url: 'https://github.com/kuniaki/docker-kvs.git',
+           userRemoteConfigs: [[name: 'origin',url: 'https://github.com/kuniaki/docker-kvs.git',
                                refspec: '',
                                credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
-                               branches: [[name: branch]]], poll: false
+                               ].plus(env.CHANGE_TARGET == null ? [] : [
+                        [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
+                    ]], poll: false
     }
 
     //Build Source code and Deploy to the test machine
