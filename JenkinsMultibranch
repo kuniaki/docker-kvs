@@ -52,22 +52,6 @@ node('Slave1') {
                     userRemoteConfigs: [[name: 'origin', url: 'https://github.com/kuniaki/docker-kvs.git',credentialsId: '9607f15b-ab8b-478a-8f88-c6fb7e651541']]
        ])
 
-//     checkout scm: [
-//         $class: 'GitSCM',
- //        branches: [[name: "${env.CHANGE_BRANCH}"]],
-  //       extensions: [[$class: 'WipeWorkspace'],
-   //                   [$class: 'PreBuildMerge', options:[[fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: "${env.CHANGE_TARGET}"],
-    //                   depth: 0,
-     //                  honorRefspec: true,
-      //                 noTags: false,
-       //                reference: '',
-        //                shallow: false]],
-         //userRemoteConfigs: [[name: 'origin',url: 'https://github.com/kuniaki/docker-kvs.git',
-          //                   refspec: '',
-           //                  credentialsId: 'eaea2108-e081-44a2-8adf-98d7e32f43e8']],
-            //                 ].plus(env.CHANGE_TARGET == null ? [] : [
-             //         [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
-              //    ]]
     }
 
     //Build Source code and Deploy to the test machine
@@ -101,6 +85,7 @@ node('Slave1') {
     }
 
     //Upload Application images to Docker Hubs
+  if(${env.BRANCH_NAME} == 'main') {
    stage('Register') {
       withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         sh 'docker login -u $USERNAME -p $PASSWORD'
@@ -111,6 +96,7 @@ node('Slave1') {
         sh "docker logout"
       }
     }
+   }
 
    //Clean up Test machine
     stage('clear') {
@@ -118,6 +104,7 @@ node('Slave1') {
    }
 
    //Deploy the application images onto production
+  if(${env.BRANCH_NAME} == 'main') {
    stage('Deploy') {
       withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         sh 'docker login -u $USERNAME -p $PASSWORD'
@@ -135,6 +122,7 @@ node('Slave1') {
         sh "docker logout"
       }
     }
+  }
 
 
   } catch(e) {
