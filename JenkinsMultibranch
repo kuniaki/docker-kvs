@@ -1,5 +1,5 @@
 stage 'Init'
-node {
+node('Slave1') {
   checkout scm
   sh 'echo $BRANCH_NAME'
 }
