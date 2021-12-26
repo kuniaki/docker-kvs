@@ -16,3 +16,7 @@ RUN apk add --update \
         chromium-chromedriver \
     # Add selenium
     && pip install selenium
+
+ENV WEB_HOST 127.0.0.1
+ENV WEB_PORT 80
+CMD ["tail", "-f", "/dev/null"]
