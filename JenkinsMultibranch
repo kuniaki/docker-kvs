@@ -65,7 +65,7 @@ node('Slave1') {
     }
 
     //Execute Unit Test and UI Automation Test in the test machine
-    stage('Test') {
+    stage('Unit Test') {
 
      //Unit Test
      sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
@@ -83,6 +83,11 @@ node('Slave1') {
 
      stopContainer()
     }
+  if(env.BRANCH_NAME == 'main') {
+    stage('UI Test') {
+
+    }
+  }
 
     //Upload Application images to Docker Hubs
   if(env.BRANCH_NAME == 'main') {
