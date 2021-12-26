@@ -85,9 +85,9 @@ node('Slave1') {
     }
 if(env.BRANCH_NAME == 'main') {
     stage('UI Test') {
-      sh "docker-compose -f uitest/docker-compose.yml up -d"
-      sh "docker container exec -it selenium python test.py"
-      sh "docker-compose -f uitest/docker-compose.yml down" 
+ //     sh "docker-compose -f uitest/docker-compose.yml up -d"
+ //     sh "docker container exec -it selenium python test.py"
+ //     sh "docker-compose -f uitest/docker-compose.yml down" 
     }
 }
 
