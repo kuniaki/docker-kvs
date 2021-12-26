@@ -83,11 +83,13 @@ node('Slave1') {
 
      stopContainer()
     }
-  if(env.BRANCH_NAME == 'main') {
+//if(env.BRANCH_NAME == 'main') {
     stage('UI Test') {
-
+      sh "docker-compose -f uitest/docker-compose.yml up -d"
+      sh "docker container exec -it selenium python test.py"
+      sh "docker-compose -f uitest/docker-compose.yml down" 
     }
-  }
+//}
 
     //Upload Application images to Docker Hubs
   if(env.BRANCH_NAME == 'main') {
