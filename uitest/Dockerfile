@@ -1,0 +1,18 @@
+RFROM python:3.7-alpine
+  
+ENV PYTHONIOENCODING utf-8
+WORKDIR /test
+
+RUN apk add --update
+RUN apk add libffi-dev
+RUN apk add --update py-pip
+RUN apk add build-base
+
+RUN apk add --update \
+        wget \
+    # Add chromium and dependences
+        udev \
+        chromium \
+        chromium-chromedriver \
+    # Add selenium
+    && pip install selenium
