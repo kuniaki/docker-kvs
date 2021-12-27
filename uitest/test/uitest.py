@@ -45,11 +45,21 @@ def get_driver_elements():
   o.add_argument('--no-sandbox')
   o.add_argument('--window-size=1200x600')
   print("deiver_elements options")
+
   driver = webdriver.Chrome(chromedriver_path, options=o)
+
+  s = Service(executable_path=chromedriver_path)
+  s.start()
+  d = webdriver.Remote(
+    s.service_url,
+    desired_capabilities=o.to_capabilities()
+  )
+
   print("deiver_elements webdriver")
   print(driver)
   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-  driver = driver.get(WEBURL)
+  driver = d.get(WEBURL)
+  print(driver.title)
   print("deiver_elements URL")
   elements = {}
   for html_id in ['key', 'value', 
