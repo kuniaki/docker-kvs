@@ -173,6 +173,9 @@ withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a
   } catch(e) {
       echo " app image is already deleted"
   }
+//if(env.BRANCH_NAME == 'main') {
+      sh "docker-compose -f uitest/docker-compose.yml down" 
+//}
       sh "docker rmi -f `docker images -q`"
 //    sh "docker rmi -f $(docker images -a -q)"
   }
