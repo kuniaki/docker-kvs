@@ -21,7 +21,7 @@ services:
     container_name: dockerkvs_webtest
     depends_on:
       - web
-      - selenium_hub
+#     - selenium_hub
     tty: true
     volumes:
       - dockerkvs_selenium_volume:/images/
