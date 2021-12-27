@@ -15,8 +15,8 @@ RUN apk add --update \
         chromium \
         chromium-chromedriver \
     # Add selenium
-    && pip install selenium
-    && pip install requests
+    && pip install selenium \
+    && pip install requests \
     && pip install pytest
 
 ENV SELENIUM_HUB_HOST 127.0.0.1
