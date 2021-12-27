@@ -19,7 +19,7 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 
 d = webdriver.Chrome(chromedriver_path, options=o)
 print(WEBURL)
-d.get(WEBURL)
+d.get('http://asahitestapp.eastus.cloudapp.azure.com')
 print(d.title)
 d.quit()
 
