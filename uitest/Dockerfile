@@ -17,6 +17,8 @@ RUN apk add --update \
     # Add selenium
     && pip install selenium
 
+ENV SELENIUM_HUB_HOST 127.0.0.1
+ENV SELENIUM_HUB_PORT 4444
 ENV WEB_HOST 127.0.0.1
 ENV WEB_PORT 80
 CMD ["tail", "-f", "/dev/null"]

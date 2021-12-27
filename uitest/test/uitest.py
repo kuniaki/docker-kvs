@@ -13,9 +13,6 @@ o.add_argument('--disable-gpu')
 o.add_argument('--no-sandbox')
 o.add_argument('--window-size=1200x600')
 
-SELENIUM_HUB_HOST = 127.0.0.1
-SELENIUM_HUB_PORT =  4444
-
 SELENIUM_HUB_HOST = os.environ['SELENIUM_HUB_HOST']
 SELENIUM_HUB_PORT = int(os.environ['SELENIUM_HUB_PORT'])
 HUBURL = f'http://{SELENIUM_HUB_HOST}:{SELENIUM_HUB_PORT}/wd/hub'
