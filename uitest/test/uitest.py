@@ -1,9 +1,8 @@
-import os, sys, time, datetime,  json
+import os, sys, time, datetime, requests, json
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-
+from selenium.common.exceptions import UnexpectedAlertPresentException
 
 chrome_path = '/usr/bin/chromium-browser'
 chromedriver_path = '/usr/lib/chromium/chromedriver'

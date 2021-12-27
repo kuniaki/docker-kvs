@@ -1,11 +1,24 @@
 version: '3'
   
 services:
-  selenium:
-    container_name: selenium
-    build:
-      context: .
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-        - ./test:/test
+# selenium:
+#   container_name: selenium
+#   build:
+#     context: .
+#     dockerfile: Dockerfile
+#   tty: true
+#   volumes:
+#       - ./test:/test
+   selenium_chrome:
+     image: selenium/node-chrome:3.141.59-vanadium
+     container_name: dockerkvs_selenium_chrome
+     depends_on:
+       - selenium_hub
+     environment:
+       - HUB_HOST=selenium_hub
+       - HUB_PORT=4444
+   selenium_hub:
+     image: selenium/hub:3.141.59-vanadium
+     container_name: dockerkvs_selenium_hub
+     ports:
+       - 4444:4444
