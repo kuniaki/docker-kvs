@@ -81,13 +81,16 @@ node('Slave1') {
     //post screenshot
  //    screenshot()
 
-     stopContainer()
+      if(env.BRANCH_NAME != 'main') {
+        stopContainer()
+      }
     }
 //if(env.BRANCH_NAME == 'main') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
       sh "docker container exec selenium python uitest.py"
+      stopContainer()
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
 //}
