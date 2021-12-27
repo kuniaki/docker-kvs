@@ -19,4 +19,4 @@ RUN apk add --update \
 
 ENV WEB_HOST 127.0.0.1
 ENV WEB_PORT 80
-CMD ["tail", "-f", "/dev/null"]
+
