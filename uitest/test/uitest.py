@@ -8,12 +8,16 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
+WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
+APIURL = WEBURL + 'api/v1'
 
 
 def test_get_success_nokey():
   clean_and_add_keys()
   try:
     (driver, elems) = get_driver_elements()
+    print(elems)
+    print(driver)
     elems['get-button'].click()
     time.sleep(1)
     test_name = sys._getframe().f_code.co_name
