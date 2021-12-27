@@ -21,7 +21,7 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 Sample test
 """
 d = webdriver.Chrome(chromedriver_path, options=o)
-print WEBURL
+print(WEBURL)
 d.get(WEBURL)
 print(d.title)
 d.quit()
