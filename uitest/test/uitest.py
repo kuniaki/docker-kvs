@@ -19,9 +19,20 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 
 """
 Sample test
-"""
 d = webdriver.Chrome(chromedriver_path, options=o)
 print(WEBURL)
 d.get(WEBURL)
 print(d.title)
 d.quit()
+"""
+
+s = Service(executable_path=chromedriver_path)
+s.start()
+d = webdriver.Remote(
+    s.service_url,
+    desired_capabilities=o.to_capabilities()
+)
+d.get(WEBURL)
+print(d.title)
+d.quit()
+
