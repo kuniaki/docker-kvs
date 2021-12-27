@@ -23,8 +23,8 @@ services:
       - web
 #     - selenium_hub
     tty: true
-    volumes:
-      - dockerkvs_selenium_volume:/images/
+#   volumes:
+#     - dockerkvs_selenium_volume:/images/
     environment:
       WEB_HOST: web
       WEB_PORT: 80
