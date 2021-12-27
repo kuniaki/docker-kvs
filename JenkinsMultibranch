@@ -149,7 +149,7 @@ node('Slave1') {
      }
 
 
-     screenshot()
+//   screenshot()
 
      stopContainer()
      deleteImages(TIME_STAMP)
