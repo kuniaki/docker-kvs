@@ -55,19 +55,19 @@ def get_driver_elements():
   )
 
   print("deiver_elements webdriver")
-  print(driver)
+  print(d)
   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-  driver.get(WEBURL)
-  print(driver.title)
+  d.get(WEBURL)
+  print(d.title)
   print("deiver_elements URL")
   elements = {}
   for html_id in ['key', 'value', 
                  'get-button', 'post-button', 'put-button', 'delete-button',
                  'request-url', 'request-body', 'response-code', 'response-body']:
-    elements[html_id] = driver.find_element_by_id(html_id)
+    elements[html_id] = d.find_element_by_id(html_id)
   print("deiver_elements ELEMENTS")
   print(elements)
-  return (driver, elements)
+  return (d, elements)
 
 def clean():
   r = requests.get(f'{APIURL}/keys/')
