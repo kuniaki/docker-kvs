@@ -81,7 +81,7 @@ node('Slave1') {
     //post screenshot
  //    screenshot()
 
-      if(env.BRANCH_NAME != 'main') {
+      if(env.CHANGE_BRANCH) {
         stopContainer()
       }
     }
