@@ -8,7 +8,7 @@ services:
      environment:
        - HUB_HOST=selenium_hub
        - HUB_PORT=4444
-   selenium_hub:
+  selenium_hub:
      image: selenium/hub:3.141.59-vanadium
      container_name: dockerkvs_selenium_hub
      ports:
