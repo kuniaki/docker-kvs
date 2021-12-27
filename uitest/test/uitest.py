@@ -23,6 +23,7 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 
 print("FLOW1")
 
+WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
 
 d = webdriver.Chrome(chromedriver_path, options=o)
 print(WEBURL)
