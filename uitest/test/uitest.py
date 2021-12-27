@@ -23,20 +23,9 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 
 print("FLOW1")
 
-driver = webdriver.Remote(
-            command_executor=HUBURL,
-            desired_capabilities=DesiredCapabilities.CHROME)
-
-print("FLOW2")
-
-driver.get(WEBURL)
-
-print("FLOW3")
-
 
 d = webdriver.Chrome(chromedriver_path, options=o)
 print(WEBURL)
-d.get('http://127.0.0.1')
+d.get(WEBURL)
 print(d.title)
 d.quit()
-
