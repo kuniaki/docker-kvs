@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-   selenium_chrome:
+  selenium_chrome:
      image: selenium/node-chrome:3.141.59-vanadium
      container_name: dockerkvs_selenium_chrome
      depends_on:
