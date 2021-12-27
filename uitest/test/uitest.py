@@ -19,7 +19,7 @@ WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 
 d = webdriver.Chrome(chromedriver_path, options=o)
 print(WEBURL)
-d.get('http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com')
+d.get('http://127.0.0.1')
 print(d.title)
 d.quit()
 
