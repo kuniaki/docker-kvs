@@ -47,8 +47,6 @@ def get_driver_elements():
   o.add_argument('--window-size=1200x600')
   print("deiver_elements options")
 
-  driver = webdriver.Chrome(chromedriver_path, options=o)
-
   s = Service(executable_path=chromedriver_path)
   s.start()
   d = webdriver.Remote(
@@ -59,7 +57,7 @@ def get_driver_elements():
   print("deiver_elements webdriver")
   print(driver)
   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-  driver = d.get(WEBURL)
+  driver.get(WEBURL)
   print(driver.title)
   print("deiver_elements URL")
   elements = {}
