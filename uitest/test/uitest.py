@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import UnexpectedAlertPresentException
+from selenium.webdriver.chrome.service import Service
 
 
 WEB_HOST = os.environ['WEB_HOST']
