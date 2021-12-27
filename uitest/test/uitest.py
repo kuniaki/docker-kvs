@@ -15,6 +15,7 @@ APIURL = WEBURL + 'api/v1'
 def test_get_success_nokey():
   clean_and_add_keys()
   try:
+    print("test_get_success_nokey")
     (driver, elems) = get_driver_elements()
     print(elems)
     print(driver)
@@ -33,6 +34,7 @@ def test_get_success_nokey():
     raise
 
 def get_driver_elements():
+  print("deiver_elements")
   chrome_path = '/usr/bin/chromium-browser'
   chromedriver_path = '/usr/lib/chromium/chromedriver'
   options = Options()
@@ -42,14 +44,20 @@ def get_driver_elements():
   o.add_argument('--disable-gpu')
   o.add_argument('--no-sandbox')
   o.add_argument('--window-size=1200x600')
+  print("deiver_elements options")
   driver = webdriver.Chrome(chromedriver_path, options=o)
+  print("deiver_elements webdriver")
+  print(driver)
   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
   driver = driver.get(WEBURL)
+  print("deiver_elements URL")
   elements = {}
   for html_id in ['key', 'value', 
                  'get-button', 'post-button', 'put-button', 'delete-button',
                  'request-url', 'request-body', 'response-code', 'response-body']:
     elements[html_id] = driver.find_element_by_id(html_id)
+  print("deiver_elements ELEMENTS")
+  print(elements)
   return (driver, elements)
 
 def clean():
