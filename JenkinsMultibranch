@@ -89,7 +89,7 @@ node('Slave1') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
-      sh "docker container exec selenium python uitest.py"
+      sh "docker container exec selenium pytest uitest.py --pytest --junitxml=ui2test.xml"
       stopContainer()
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
