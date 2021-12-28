@@ -3,6 +3,8 @@ FROM python:3.7-alpine
 ENV PYTHONIOENCODING utf-8
 WORKDIR /test
 
+RUN mkdir /images
+
 RUN apk add --update
 RUN apk add libffi-dev
 RUN apk add --update py-pip

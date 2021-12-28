@@ -79,7 +79,7 @@ node('Slave1') {
      junit 'uitest.xml'
 
     //post screenshot
- //    screenshot()
+       screenshot()
 
       if(env.CHANGE_BRANCH) {
         stopContainer()
@@ -185,8 +185,8 @@ withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a
   }
 }
 def screenshot() {
-    sh "docker exec dockerkvs_webtest ls -l /images"
-    sh "docker cp dockerkvs_webtest:/images ."
+    sh "docker exec selenium ls -l /images"
+    sh "docker cp selenium:/images ."
     archiveArtifacts 'images/*'
 }
 
