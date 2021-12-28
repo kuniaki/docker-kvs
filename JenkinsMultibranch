@@ -74,12 +74,12 @@ node('Slave1') {
 
      //UI Automation Test
      test_stage = '2'
-     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
-     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
-     junit 'uitest.xml'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=statictest.xml"
+     sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
+     junit 'statictest.xml'
 
     //post screenshot
-       screenshot()
+    //   screenshot()
 
       if(env.CHANGE_BRANCH) {
         stopContainer()
@@ -89,7 +89,15 @@ node('Slave1') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
-      sh "docker container exec selenium pytest uitest.py --junitxml=ui2test.xml"
+      sh "pwd"
+      sh "docker container exec selenium pytest uitest.py --junitxml=uitest.xml"
+      sh "docker exec selenium pwd"
+      sh "docker exec selenium ls -l /"
+      sh "ls -la uitest/test"
+      sh "cp uitest/test/uitest.xml ."
+      junit 'uitest.xml'
+      //post screenshot
+       screenshot()
       stopContainer()
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
