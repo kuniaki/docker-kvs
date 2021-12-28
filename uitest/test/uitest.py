@@ -305,7 +305,8 @@ def get_driver_elements():
     o.add_argument('--headless')
     o.add_argument('--disable-gpu')
     o.add_argument('--no-sandbox')
-    o.add_argument('--window-size=1200x600')
+#   o.add_argument('--window-size=1200x600')
+    o.add_argument('--start-maximized')  
 
     d = webdriver.Chrome(chromedriver_path, options=o)
 
