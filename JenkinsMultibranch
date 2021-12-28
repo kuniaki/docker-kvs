@@ -186,9 +186,13 @@ withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a
   if(env.BRANCH_NAME == 'main') {
       sh "docker-compose -f uitest/docker-compose.yml down" 
   }
+  try {
       sh "docker rmi -f `docker images -q`"
 //    sh "docker rmi -f $(docker images -a -q)"
+  }catch(e) {
+      echo " images is already deleted"
   }
+ }
 }
 def screenshot() {
     sh "docker exec selenium ls -l /images"
