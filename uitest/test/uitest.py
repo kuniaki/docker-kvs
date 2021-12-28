@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.service import Service
 WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
-WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
+#WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
 APIURL = WEBURL + '/api/v1'
 
 logging.basicConfig(level=logging.DEBUG)
@@ -54,7 +54,7 @@ def get_driver_elements():
 
     d = webdriver.Chrome(chromedriver_path, options=o)
 
-    WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
+#   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
     d.get(WEBURL)
     elements = {}
     for html_id in ['key', 'value',
