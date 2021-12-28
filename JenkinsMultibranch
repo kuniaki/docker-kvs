@@ -78,14 +78,12 @@ node('Slave1') {
      sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
      junit 'statictest.xml'
 
-    //post screenshot
-    //   screenshot()
-
       if(env.CHANGE_BRANCH) {
         stopContainer()
       }
     }
-//if(env.BRANCH_NAME == 'main') {
+
+  if(env.BRANCH_NAME == 'main') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
@@ -101,7 +99,7 @@ node('Slave1') {
       stopContainer()
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
-//}
+  }
 
     //Upload Application images to Docker Hubs
   if(env.BRANCH_NAME == 'main') {
@@ -185,9 +183,9 @@ withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a
   } catch(e) {
       echo " app image is already deleted"
   }
-//if(env.BRANCH_NAME == 'main') {
+  if(env.BRANCH_NAME == 'main') {
       sh "docker-compose -f uitest/docker-compose.yml down" 
-//}
+  }
       sh "docker rmi -f `docker images -q`"
 //    sh "docker rmi -f $(docker images -a -q)"
   }
