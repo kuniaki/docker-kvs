@@ -83,7 +83,7 @@ node('Slave1') {
       }
     }
 
-  if(env.BRANCH_NAME == 'main') {
+  if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
