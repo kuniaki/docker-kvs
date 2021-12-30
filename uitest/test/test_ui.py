@@ -16,6 +16,20 @@ APIURL = WEBURL + '/api/v1'
 logging.basicConfig(level=logging.DEBUG)
 mylogger= logging.getLogger()
 
+def teststock():
+  clean()
+  try:
+    (driver, elems) = get_driver_elements()
+    time.sleep(1)
+    elems['stock-button'].click()
+    time.sleep(2)
+    take_screenshot(driver, sys._getframe().f_code.co_name)
+    driver.quit()
+  except:
+    driver.quit()
+    raise
+
+
 ##################
 ### GET BUTTON ###
 ##################
