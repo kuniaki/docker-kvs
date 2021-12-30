@@ -78,7 +78,7 @@ node('Slave1') {
      sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
      junit 'statictest.xml'
 
-      if(env.BRANCH_NAME != 'main' || env.BRANCH_NAME != 'uitest') {
+      if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
         stopContainer()
       }
     }
