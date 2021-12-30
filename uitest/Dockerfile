@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.7.5-slim
   
 ENV PYTHONIOENCODING utf-8
 WORKDIR /test
@@ -21,8 +21,6 @@ RUN apk add --update \
     && pip install requests \
     && pip install pytest
 
-ENV SELENIUM_HUB_HOST 127.0.0.1
-ENV SELENIUM_HUB_PORT 4444
 ENV WEB_HOST 127.0.0.1
 ENV WEB_PORT 80
 
