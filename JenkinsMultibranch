@@ -89,7 +89,7 @@ node('Slave1') {
       sh "ls -la uitest/test"
       sh "pwd"
       sh "docker exec selenium pwd"
-      sh "docker exec selenium ls -l /"
+      sh "docker exec selenium ls -l"
       sh "docker container exec selenium pytest --junitxml=uitest.xml"
       sh "docker exec selenium pwd"
       sh "docker exec selenium ls -l /"
