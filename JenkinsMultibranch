@@ -78,7 +78,7 @@ node('Slave1') {
      sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
      junit 'statictest.xml'
 
-      if(env.BRANCH_NAME != 'main') {
+      if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
         stopContainer()
       }
     }
@@ -88,9 +88,11 @@ node('Slave1') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
       sh "ls -la uitest/test"
       sh "pwd"
-      sh "docker container exec selenium pytest uitest.py --junitxml=uitest.xml"
       sh "docker exec selenium pwd"
-      sh "docker exec selenium ls -l /"
+      sh "docker exec selenium ls -l /test"
+      sh "docker container exec selenium pytest --junitxml=uitest.xml"
+      sh "docker exec selenium pwd"
+      sh "docker exec selenium ls -l"
       sh "ls -la uitest/test"
       sh "cp uitest/test/uitest.xml ."
       junit 'uitest.xml'
@@ -161,6 +163,7 @@ node('Slave1') {
 
 //   screenshot()
 
+     sh "docker-compose -f uitest/docker-compose.yml down" 
      stopContainer()
      deleteImages(TIME_STAMP)
   }
