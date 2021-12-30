@@ -327,7 +327,7 @@ def get_driver_elements():
     d.get(WEBURL)
     elements = {}
     for html_id in ['key', 'value',
-                 'get-button', 'post-button', 'put-button', 'delete-button',
+                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button',
                  'request-url', 'request-body', 'response-code', 'response-body']:
      elements[html_id] = d.find_element_by_id(html_id)
     print(d)
