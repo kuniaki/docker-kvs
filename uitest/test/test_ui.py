@@ -16,6 +16,20 @@ APIURL = WEBURL + '/api/v1'
 logging.basicConfig(level=logging.DEBUG)
 mylogger= logging.getLogger()
 
+def teststock():
+  clean()
+  try:
+    (driver, elems) = get_driver_elements()
+    time.sleep(1)
+    elems['stock-button'].click()
+    time.sleep(2)
+    take_screenshot(driver, sys._getframe().f_code.co_name)
+    driver.quit()
+  except:
+    driver.quit()
+    raise
+
+
 ##################
 ### GET BUTTON ###
 ##################
@@ -313,7 +327,7 @@ def get_driver_elements():
     d.get(WEBURL)
     elements = {}
     for html_id in ['key', 'value',
-                 'get-button', 'post-button', 'put-button', 'delete-button',
+                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button',
                  'request-url', 'request-body', 'response-code', 'response-body']:
      elements[html_id] = d.find_element_by_id(html_id)
     print(d)
