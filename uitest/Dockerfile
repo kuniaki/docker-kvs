@@ -3,8 +3,6 @@ FROM python:3.7-alpine
 ENV PYTHONIOENCODING utf-8
 WORKDIR /test
 
-COPY ./test/test_ui.py /src/test_ui.py
-
 RUN mkdir /images
 
 RUN apk add --update
