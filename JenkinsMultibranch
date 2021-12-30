@@ -136,6 +136,7 @@ node('Slave1') {
         sh "docker -H ssh://testapp@$production rm -f web"
         sh "docker -H ssh://testapp@$production rm -f app"
         sh "docker -H ssh://testapp@$production rm -f dockerkvs_db"
+        sh "docker -H ssh://testapp@$production rmi -f $(docker images -a -q)"
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml up -d"
         sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml ps"
         sh "docker logout"
