@@ -3,23 +3,26 @@ google.charts.load('current', {'packages':['corechart']});
 $('#btn').click(function(){
     var code = $('#input').val()
     var span = $('#span').val()
-    getInfo(code, span, mainChart);
+    var dates = $('#inputs').val()
+    var datee = $('#inpute').val()
+    var countryc =  $('#inputc').val()
+    getInfo(code, span,dates,datee,countryc, mainChart);
 })
 
-function getInfo(code, span, callback){
+function getInfo(code, span,dates,datee,countryc,callback){
     $.ajax({
-        url : 'https://api.iextrading.com/1.0/stock/' + code + '/chart/' + span,
-        type : 'GET',       
-        async : true,        
-        cashe : false,     
-        dataType : 'json',  
-        contentType : 'application/json' 
+        url : 'http://127.0.0.1:80/api/v1/stock?code=' + code + '&country='+ countryc  + '&from_date=' + dates + '&to_date=' + datee,
+        type : 'GET',
+        async : true,
+        cashe : false,
+        dataType : 'json',
+        contentType : 'application/json'
     }).done(function(result){
         callback(result);
     }).fail(function(result){
         alert('Failed to load the information');
         console.log(result)
-    });  
+    });
 }
 
 function mainChart(result){
@@ -31,7 +34,13 @@ function mainChart(result){
             chartData.addColumn('number');
         }
         //いちいち書くのが面倒なので、取得した情報の長さを配列に入れる
-        var length = result.length;
+        date_d = result["date"]
+        var length = date_d.length;
+        open_d = result["open"]
+        close_d = result["close"]
+        high_d = result["high"]
+        low_d = result["low"]
+        volume_d = result["volume"]
         //描画用のデータを一時的に入れる
         var insertingData = new Array(length);
         //平均を出すための割り算の分母
@@ -50,8 +59,8 @@ function mainChart(result){
         //基準日より５日前までのデータを足し合わせ、平均値を出す
         for(var m = 0; m < length - 4; m++){
             for(var n = 0; n < 5; n++){
-                if(result[m+n].close != ''){
-                    temp = temp + parseFloat(result[m+n].close);
+                if(close_d[m+n] != ''){
+                    temp = temp + parseFloat(close_d[m+n]);
                     divide++;
                 }
             }
@@ -63,8 +72,8 @@ function mainChart(result){
         //上と同様の処理
         for(var m = 0; m < length - 24; m++){
             for(var n = 0; n < 25; n++){
-                if(result[m+n].close != ''){
-                    temp = temp + parseFloat(result[m+n].close);
+                if(close_d[m+n] != ''){
+                    temp = temp + parseFloat(close_d[m+n]);
                     divide++
                 }
             }
@@ -76,8 +85,8 @@ function mainChart(result){
         //上と同様の処理
         for(var m = 0; m < length - 49; m++){
             for(var n = 0; n < 49; n++){
-                if(result[m+n].close != ''){
-                    temp = temp + parseFloat(result[m+n].close);
+                if(close_d[m+n] != ''){
+                    temp = temp + parseFloat(close_d[m+n]);
                     divide++
                 }
             }
@@ -91,14 +100,14 @@ function mainChart(result){
         //チャートの日付を保持する配列
         var dates = new Array();
         for(var s = 0; s < length; s++){
-            if(result[s].volume != ''){
-                volume[s] = result[s].volume;
-                dates[s] = String(result[s].date);
+            if(volume_d[s] != ''){
+                volume[s] = volume_d[s];
+                dates[s] = String(date_d[s]);
             }
         }
         //配列insertingDataの中に、[安値、始値、高値、終値、５日移動平均線、２５日移動平均線、５０日移動平均線]の形で値を入れ込む
         for(var a = 0; a < length; a++){
-            insertingData[a] = [dates[a],parseFloat(result[a].low),parseFloat(result[a].open),parseFloat(result[a].close),parseFloat(result[a].high),ave[0][a],ave[1][a],ave[2][a]]
+            insertingData[a] = [dates[a],parseFloat(low_d[a]),parseFloat(open_d[a]),parseFloat(close_d[a]),parseFloat(high_d[a]),ave[0][a],ave[1][a],ave[2][a]]
         }
         //チャート描画用の配列の中に、insertingDataの値を入れ込む
         //最古の50日分のデータまでは移動平均線のデータが揃っていないので、取り除く
@@ -119,15 +128,15 @@ function mainChart(result){
                 format: 'yy/MM/dd',
                 direction: -1,
             },
-            bar: { 
-                groupWidth: '100%' 
+            bar: {
+                groupWidth: '100%'
             },
             width: 1200,
             height: 400,
             lineWidth: 2,
             curveType: 'function',
             //チャートのタイプとして、ローソク足を指定
-            seriesType: "candlesticks",  
+            seriesType: "candlesticks",
             //ローソク足だでなく、線グラフも三種類表示することを記述
             series: {
                 1:{
@@ -136,13 +145,13 @@ function mainChart(result){
                 },
                 2:{
                     type: "line",
-                    color: 'red',                
+                    color: 'red',
                 },
                 3:{
                     type: "line",
-                    color: 'orange',                
+                    color: 'orange',
                 },
-            } 
+            }
         };
         //描画の処理
         var chart = new google.visualization.ComboChart(document.getElementById('appendMain'));
@@ -172,8 +181,8 @@ function volumeChart(volume, dates, length){
         legend: {
             position: 'none',
         },
-        bar: { 
-            groupWidth: '100%' 
+        bar: {
+            groupWidth: '100%'
         },
         hAxis: {direction: -1},
         width: 1200,
@@ -184,3 +193,4 @@ function volumeChart(volume, dates, length){
     var chart = new google.visualization.ColumnChart(document.getElementById('appendVolume'));
     chart.draw(chartData, options);
 }
+
