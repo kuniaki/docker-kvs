@@ -28,8 +28,10 @@ node('Slave1') {
      step([$class: 'WsCleanup'])
     }
 
-    stage('Dependency') {
+    if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
+       stage('Dependency') {
         build job: 'stock'
+       }
     }
 
     //Get Source Code
