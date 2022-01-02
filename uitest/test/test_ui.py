@@ -16,7 +16,7 @@ APIURL = WEBURL + '/api/v1'
 logging.basicConfig(level=logging.DEBUG)
 mylogger= logging.getLogger()
 
-def teststock():
+def test_click_stock_button():
   clean()
   try:
     (driver, elems) = get_driver_elements()
