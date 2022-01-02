@@ -1,5 +1,5 @@
 オリジナルのGitHubリポジトリは以下となります。
 
-TESTB
+TESTC
 
 https://github.com/kuniaki/docker-kvs
