@@ -11,7 +11,7 @@ $('#btn').click(function(){
 
 function getInfo(code, span,dates,datee,countryc,callback){
     $.ajax({
-        url : 'http://127.0.0.1:80/api/v1/stock?code=' + code + '&country='+ countryc  + '&from_date=' + dates + '&to_date=' + datee,
+        url : 'http://http://kuniakistock.westus.cloudapp.azure.com/api/v1/stock?code=' + code + '&country='+ countryc  + '&from_date=' + dates + '&to_date=' + datee,
         type : 'GET',
         async : true,
         cashe : false,
