@@ -28,6 +28,10 @@ node('Slave1') {
      step([$class: 'WsCleanup'])
     }
 
+    stage('Dependency') {
+        build job: 'stock'
+    }
+
     //Get Source Code
     stage('Checkout') {
 
