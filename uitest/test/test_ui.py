@@ -312,6 +312,23 @@ def test_delete_fail_keynotexist():
     raise
 
 def get_driver_elements():
+    options = Options()
+    options.add_argument('--headless')
+    driver = webdriver.Remote(
+            command_executor=HUBURL,
+            desired_capabilities=DesiredCapabilities.CHROME)
+    driver.get(WEBURL)
+    elements = {}
+    for html_id in ['key', 'value', 
+                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button'
+                 'request-url', 'request-body', 'response-code', 'response-body']:
+     elements[html_id] = driver.find_element_by_id(html_id)
+    return (driver, elements)
+
+
+
+
+"""
     chrome_path = '/usr/bin/chromium-browser'
     chromedriver_path = '/usr/lib/chromium/chromedriver'
     o = Options()
@@ -323,7 +340,6 @@ def get_driver_elements():
 
     d = webdriver.Chrome(chromedriver_path, options=o)
 
-#   WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
     d.get(WEBURL)
     elements = {}
     for html_id in ['key', 'value',
@@ -332,6 +348,7 @@ def get_driver_elements():
      elements[html_id] = d.find_element_by_id(html_id)
     print(d)
     return (d, elements)
+""
 
 def clean():
   r = requests.get(f'{APIURL}/keys/')
