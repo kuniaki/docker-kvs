@@ -19,6 +19,11 @@ node('Slave1') {
 
     //Clean up Build machine Workspace
     stage('init') {
+
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        sh 'docker login -u $USERNAME -p $PASSWORD'
+      }
+
        sh '''
        git config --global user.name kuniaki
        git config --global user.email kuniaki.kudo@gmail.com
