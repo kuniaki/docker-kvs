@@ -312,6 +312,7 @@ def test_delete_fail_keynotexist():
     driver.quit()
     raise
 
+""
 def get_driver_elements():
     options = Options()
     options.add_argument('--headless')
@@ -325,11 +326,8 @@ def get_driver_elements():
                  'request-url', 'request-body', 'response-code', 'response-body']:
      elements[html_id] = driver.find_element_by_id(html_id)
     return (driver, elements)
-
-
-
-
 """
+def get_driver_elements():
     chrome_path = '/usr/bin/chromium-browser'
     chromedriver_path = '/usr/lib/chromium/chromedriver'
     o = Options()
@@ -349,7 +347,6 @@ def get_driver_elements():
      elements[html_id] = d.find_element_by_id(html_id)
     print(d)
     return (d, elements)
-""
 
 def clean():
   r = requests.get(f'{APIURL}/keys/')
