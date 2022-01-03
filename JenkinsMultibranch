@@ -31,7 +31,7 @@ node('Slave1') {
 
     if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
        stage('Dependency') {
-          build job: 'stock1'
+//        build job: 'stock1'
        }
     }
 
@@ -85,11 +85,10 @@ node('Slave1') {
      sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
      junit 'statictest.xml'
 
- //     if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
+      if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
         stopContainer()
- //     }
+      }
     }
-/*
   if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
@@ -109,7 +108,6 @@ node('Slave1') {
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
   }
-*/
     //Upload Application images to Docker Hubs
   if(env.BRANCH_NAME == 'main') {
    stage('Register') {
@@ -171,13 +169,12 @@ node('Slave1') {
      }
 
 
-//   screenshot()
+     screenshot()
 
      sh "docker-compose -f uitest/docker-compose.yml down" 
      stopContainer()
      deleteImages(TIME_STAMP)
-  }
-}
+  } }
 
 def stopContainer() {
     sh "docker-compose -f docker-compose.build.yml down"
@@ -208,9 +205,13 @@ withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b12
  }
 }
 def screenshot() {
+  try {
     sh "docker exec selenium ls -l /images"
     sh "docker cp selenium:/images ."
     archiveArtifacts 'images/*'
+  }catch(e) {
+      echo "No Screenshots "
+  }
 }
 
 def testReport(index) {
