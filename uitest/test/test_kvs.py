@@ -312,21 +312,6 @@ def test_delete_fail_keynotexist():
     driver.quit()
     raise
 
-""
-def get_driver_elements():
-    options = Options()
-    options.add_argument('--headless')
-    driver = webdriver.Remote(
-            command_executor=HUBURL,
-            desired_capabilities=DesiredCapabilities.CHROME)
-    driver.get(WEBURL)
-    elements = {}
-    for html_id in ['key', 'value', 
-                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button'
-                 'request-url', 'request-body', 'response-code', 'response-body']:
-     elements[html_id] = driver.find_element_by_id(html_id)
-    return (driver, elements)
-"""
 def get_driver_elements():
     chrome_path = '/usr/bin/chromium-browser'
     chromedriver_path = '/usr/lib/chromium/chromedriver'
