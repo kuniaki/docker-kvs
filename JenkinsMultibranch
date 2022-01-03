@@ -25,12 +25,13 @@ node('Slave1') {
        '''
 
      //Clean up WORKSPACE
-     step([$class: 'WsCleanup'])
+     cleanWs()
+   //  step([$class: 'WsCleanup'])
     }
 
     if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
        stage('Dependency') {
-        build job: 'stock'
+   //     build job: 'stock'
        }
     }
 
@@ -84,11 +85,11 @@ node('Slave1') {
      sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
      junit 'statictest.xml'
 
-      if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
+ //     if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
         stopContainer()
-      }
+ //     }
     }
-
+/*
   if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
     stage('UI Test') {
       sh "docker-compose -f uitest/docker-compose.yml up -d"
@@ -108,11 +109,13 @@ node('Slave1') {
       sh "docker-compose -f uitest/docker-compose.yml down" 
     }
   }
-
+*/
     //Upload Application images to Docker Hubs
   if(env.BRANCH_NAME == 'main') {
    stage('Register') {
-      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        println "Credential"
+        println "UserName ${USERNAME}"
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
         sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
@@ -131,7 +134,7 @@ node('Slave1') {
    //Deploy the application images onto production
   if(env.BRANCH_NAME == 'main') {
    stage('Deploy') {
-      withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
         sh 'docker login -u $USERNAME -p $PASSWORD'
         sh "cat docker-compose.prod.yml"
         sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
@@ -139,12 +142,12 @@ node('Slave1') {
         sh "cat .env"
 
         //Stop Container
-        sh "docker -H ssh://testapp@$production rm -f web"
-        sh "docker -H ssh://testapp@$production rm -f app"
-        sh "docker -H ssh://testapp@$production rm -f dockerkvs_db"
+        sh "docker -H ssh://kuniaki@$production rm -f web"
+        sh "docker -H ssh://kuniaki@$production rm -f app"
+        sh "docker -H ssh://kuniaki@$production rm -f dockerkvs_db"
  //       sh "docker -H ssh://testapp@$production rmi -f \$(docker images -a -q)"
-        sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml up -d"
-        sh "docker-compose -H ssh://testapp@$production -f docker-compose.prod.yml ps"
+        sh "docker-compose -H ssh://kuniaki@$production -f docker-compose.prod.yml up -d"
+        sh "docker-compose -H ssh://kuniaki@$production -f docker-compose.prod.yml ps"
         sh "docker logout"
       }
     }
@@ -181,7 +184,7 @@ def stopContainer() {
 }
 
 def deleteImages(TIME_STAMP) {
-withCredentials([usernamePassword(credentialsId: 'c7a122c0-6e6a-4965-ae18-e03e7a2a0cbf', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
   try {
       sh "docker rmi -f $USERNAME/web:${TIME_STAMP}"
   }catch(e) {
@@ -258,3 +261,4 @@ def testReport(index) {
   }
 
 }
+
