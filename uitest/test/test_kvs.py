@@ -11,7 +11,7 @@ WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 #WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 #WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-WEBURL = 'http://stock.ngrok.io'
+WEBURL = 'http://ckv.ngrok.io'
 APIURL = WEBURL + '/api/v1'
 
 logging.basicConfig(level=logging.DEBUG)
