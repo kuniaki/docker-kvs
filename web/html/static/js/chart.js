@@ -14,7 +14,7 @@ $('#btn-getinfo').click(function(){
 
 function getInfo(code,dates,datee,countryc,callback){
     $.ajax({
-        url : 'http://192.168.11.60/api/v1/stock?code=' + code + '&country='+ countryc  + '&from_date=' + dates + '&to_date=' + datee,
+        url : 'https://stock.ngrok.io/api/v1/stock?code=' + code + '&country='+ countryc  + '&from_date=' + dates + '&to_date=' + datee,
         type : 'GET',       
         async : true,        
         cashe : false,     
