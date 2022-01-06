@@ -10,7 +10,8 @@ def now = new Date()
 def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
 def test_stage = '1'
 
-def production = '192.168.11.35'
+//def production = '192.168.11.35'
+def production = 'ckv.ngrok.io'
 
 
 node('Slave1') {
