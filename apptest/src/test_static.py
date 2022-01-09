@@ -1,9 +1,10 @@
 import os
 from requests import get, post, put, delete
 
-WEB_HOST = os.environ['WEB_HOST']
-WEB_PORT = int(os.environ['WEB_PORT'])
-BASEURL = 'http://{}:{}'.format(WEB_HOST, WEB_PORT)
+##APP_HOST = os.environ['APP_HOST']
+##APP_PORT = int(os.environ['APP_PORT'])
+##BASEURL = 'https://{}:{}'.format(APP_HOST, APP_PORT)
+BASEURL = 'https://ckv.ngrok.io/'
 
 ################
 ## index.html ##
