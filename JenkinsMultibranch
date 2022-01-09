@@ -36,7 +36,7 @@ node('Slave1') {
 
     if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
        stage('Dependency') {
-          build job: 'stock1'
+          build(job: 'StockMulti/main')
        }
     }
 
