@@ -17,9 +17,9 @@ def test_click_stock_button():
   try:
     driver = get_driver()
     time.sleep(1)
-    driver.findElement(By.id("stock-button")).click();
+    driver.find_element_by_id("stock-button").click()
     time.sleep(1)
-    driver.findElement(By.id("btn-getinfo")).click();
+    driver.find_element_by_id("btn-getinfo").click()
     time.sleep(2)
     take_screenshot(driver, sys._getframe().f_code.co_name)
     driver.quit()
