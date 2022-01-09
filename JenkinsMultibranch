@@ -84,15 +84,11 @@ node('Slave1') {
      sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
      junit 'apptest.xml'
 
-     //UI Automation Test
      test_stage = '2'
-     sh "docker container exec dockerkvs_webtest pytest --junitxml=statictest.xml"
-     sh "docker cp dockerkvs_webtest:/src/statictest.xml ."
-     junit 'statictest.xml'
 
-      if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
+     if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
         stopContainer()
-      }
+     }
     }
   if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
     stage('UI Test') {
