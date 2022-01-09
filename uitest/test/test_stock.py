@@ -16,6 +16,8 @@ WEBURL = 'http://192.168.11.57/stock'
 def test_click_stock_button():
   try:
     (driver, elems) = get_driver_elements()
+    print(driver)
+    print(elements)
     time.sleep(1)
     elems['btn-getinfo'].click()
     time.sleep(2)
