@@ -11,22 +11,23 @@ WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 #WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 #WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-WEBURL = 'https://stock.ngrok.io/'
+WEBURL = 'http://192.168.11.57'
 
 def test_click_stock_button():
   try:
-    (driver, elems) = get_driver_elements()
+    driver = get_driver()
     time.sleep(1)
-    elems['btn-getinfo'].click()
-    time.sleep(2)
+    driver.find_element_by_id("stock-button").click()
+    time.sleep(1)
+    driver.find_element_by_id("btn-getinfo").click()
+    time.sleep(5)
     take_screenshot(driver, sys._getframe().f_code.co_name)
     driver.quit()
   except:
     driver.quit()
     raise
 
-
-def get_driver_elements():
+def get_driver():
     chrome_path = '/usr/bin/chromium-browser'
     chromedriver_path = '/usr/lib/chromium/chromedriver'
     o = Options()
@@ -39,11 +40,8 @@ def get_driver_elements():
     d = webdriver.Chrome(chromedriver_path, options=o)
 
     d.get(WEBURL)
-    elements = {}
-    for html_id in ['btn-getinfo']:
-     elements[html_id] = d.find_element_by_id(html_id)
-    print(d)
-    return (d, elements)
+    return d
+
 
 def take_screenshot(driver, title):
   today = datetime.datetime.today()
