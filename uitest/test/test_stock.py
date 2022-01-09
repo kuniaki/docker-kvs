@@ -15,10 +15,9 @@ WEBURL = 'http://192.168.11.57'
 
 def test_click_stock_button():
   try:
-    (driver, elems) = get_driver_elements()
-    print(driver)
-    print(elements)
+    driver = get_driver()
     time.sleep(1)
+    driver.findElement(By.id("stock-button")).click();
     elems['stock-getinfo'].click()
     time.sleep(1)
     driver.findElement(By.id("btn-getinfo")).click();
@@ -29,7 +28,7 @@ def test_click_stock_button():
     driver.quit()
     raise
 
-def get_driver_elements():
+def get_driver():
     chrome_path = '/usr/bin/chromium-browser'
     chromedriver_path = '/usr/lib/chromium/chromedriver'
     o = Options()
@@ -42,13 +41,7 @@ def get_driver_elements():
     d = webdriver.Chrome(chromedriver_path, options=o)
 
     d.get(WEBURL)
-    elements = {}
-    for html_id in ['key', 'value',
-                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button',
-                 'request-url', 'request-body', 'response-code', 'response-body']:
-     elements[html_id] = d.find_element_by_id(html_id)
-    print(d)
-    return (d, elements)
+    return d
 
 
 def take_screenshot(driver, title):
