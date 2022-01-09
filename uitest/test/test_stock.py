@@ -11,7 +11,7 @@ WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 #WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 #WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-WEBURL = 'http://192.168.11.60'
+WEBURL = 'https://stock.ngrok.io/'
 
 def test_click_stock_button():
   try:
