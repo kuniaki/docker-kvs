@@ -18,7 +18,7 @@ def test_click_stock_button():
     (driver, elems) = get_driver_elements()
     time.sleep(1)
     elems['btn-getinfo'].click()
-    time.sleep(5)
+    time.sleep(2)
     take_screenshot(driver, sys._getframe().f_code.co_name)
     driver.quit()
   except:
