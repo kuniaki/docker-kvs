@@ -1,5 +1,5 @@
 From python:3.7.5-slim
-RUN pip install pytest==5.2.0 requests==2.22.0 selenium==3.141.0
+RUN pip install pytest==5.2.0 requests==2.22.0
 RUN mkdir /images
 WORKDIR /src
 COPY ./src/test_static.py /src/test_static.py
