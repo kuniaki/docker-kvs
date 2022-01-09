@@ -8,6 +8,7 @@ services:
     container_name: dockerkvs_apptest
     depends_on:
       - app
+      - web
     tty: true
     environment:
       APP_HOST: app
