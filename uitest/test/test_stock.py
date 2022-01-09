@@ -11,7 +11,7 @@ WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 #WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 #WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
-WEBURL = 'http://192.168.11.57/stock'
+WEBURL = 'http://192.168.11.57'
 
 def test_click_stock_button():
   try:
@@ -19,14 +19,15 @@ def test_click_stock_button():
     print(driver)
     print(elements)
     time.sleep(1)
-    elems['btn-getinfo'].click()
+    elems['stock-getinfo'].click()
+    time.sleep(1)
+    driver.findElement(By.id("btn-getinfo")).click();
     time.sleep(2)
     take_screenshot(driver, sys._getframe().f_code.co_name)
     driver.quit()
   except:
     driver.quit()
     raise
-
 
 def get_driver_elements():
     chrome_path = '/usr/bin/chromium-browser'
@@ -42,10 +43,13 @@ def get_driver_elements():
 
     d.get(WEBURL)
     elements = {}
-    for html_id in ['btn-getinfo']:
+    for html_id in ['key', 'value',
+                 'get-button', 'post-button', 'put-button', 'delete-button','stock-button',
+                 'request-url', 'request-body', 'response-code', 'response-body']:
      elements[html_id] = d.find_element_by_id(html_id)
     print(d)
     return (d, elements)
+
 
 def take_screenshot(driver, title):
   today = datetime.datetime.today()
