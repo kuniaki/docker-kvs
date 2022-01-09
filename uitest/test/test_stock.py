@@ -20,7 +20,7 @@ def test_click_stock_button():
     driver.find_element_by_id("stock-button").click()
     time.sleep(1)
     driver.find_element_by_id("btn-getinfo").click()
-    time.sleep(2)
+    time.sleep(5)
     take_screenshot(driver, sys._getframe().f_code.co_name)
     driver.quit()
   except:
