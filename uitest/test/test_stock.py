@@ -11,7 +11,11 @@ WEB_HOST = os.environ['WEB_HOST']
 WEB_PORT = int(os.environ['WEB_PORT'])
 #WEBURL = f'http://{WEB_HOST}:{WEB_PORT}/'
 #WEBURL = 'http://asahihdgrjenkinsslave1.eastus.cloudapp.azure.com'
+<<<<<<< HEAD
 WEBURL = 'https://www.jenkinsdev.net/'
+=======
+WEBURL = 'https://ckv.ngrok.io/'
+>>>>>>> main
 
 def test_click_stock_button():
   try:
