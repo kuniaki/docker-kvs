@@ -20,7 +20,6 @@ def api_keys():
     keys = [key.decode() for key in keys]
     values = [value.decode() for value in REDIS.mget(*keys)]
     data.update(dict(zip(keys, values)))
-    data = {}
   return success(data)
 
 @app.route('/api/v1/keys/<key>', methods=['GET', 'POST', 'PUT', 'DELETE'])
