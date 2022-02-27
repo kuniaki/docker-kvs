@@ -4,7 +4,7 @@ from requests import get, post, put, delete
 ##APP_HOST = os.environ['APP_HOST']
 ##APP_PORT = int(os.environ['APP_PORT'])
 ##BASEURL = 'https://{}:{}'.format(APP_HOST, APP_PORT)
-BASEURL = 'http://192.168.11.57/'
+BASEURL = 'https://www.jenkinsdev.net'
 
 ################
 ## index.html ##
