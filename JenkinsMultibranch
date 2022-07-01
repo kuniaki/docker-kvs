@@ -13,7 +13,7 @@ def test_stage = '1'
 def production = '192.168.11.35'
 
 
-node('Slave1') {
+node('GKPIGraphics') {
 
   try {
 
