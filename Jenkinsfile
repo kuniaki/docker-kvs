@@ -1,69 +1,277 @@
-pipeline {
-  agent any
-  environment {
-    DOCKERHUB_USER = "kuniaki0417"
-    BUILD_HOST = "root@192.168.11.34"
-    PROD_HOST = "root@192.168.11.35"
-    BUILD_TIMESTAMP = sh(script: "date +%Y%m%d-%H%M%S", returnStdout: true).trim()
+import hudson.tasks.test.AbstractTestResultAction
+import hudson.model.Actionable
+import hudson.tasks.junit.CaseResult
+import hudson.util.DescribableList
+import hudson.slaves.EnvironmentVariablesNodeProperty
+import jenkins.model.Jenkins
+
+
+def now = new Date()
+def TIME_STAMP = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+def test_stage = '1'
+
+def production = '20.222.76.118'
+
+
+node('GKPIGraphics') {
+
+  try {
+
+    //Clean up Build machine Workspace
+    stage('init') {
+
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        sh 'docker login -u $USERNAME -p $PASSWORD'
+      }
+
+       sh '''
+       git config --global user.name kuniaki
+       git config --global user.email kuniaki.kudo@gmail.com
+       '''
+
+     //Clean up WORKSPACE
+     cleanWs()
+   //  step([$class: 'WsCleanup'])
+    }
+
+    if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
+       stage('Dependency') {
+//    build(job: 'StockMulti/main')
+       }
+    }
+
+    //Get Source Code
+    stage('Checkout') {
+
+       println "Current branch ${env.BRANCH_NAME}"
+       println "Change branch ${env.CHANGE_BRANCH}"
+       println "Target branch ${env.CHANGE_TARGET}"
+       branch = env.BRANCH_NAME
+
+       if(env.CHANGE_BRANCH) {
+         branch = env.CHANGE_BRANCH
+       }
+
+       checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: branch]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: []
+                    .plus(env.CHANGE_TARGET == null ? [] : [
+                        [$class: 'PreBuildMerge', options: [fastForwardMode: 'NO_FF', mergeRemote: 'origin', mergeTarget: env.CHANGE_TARGET]],
+                    ]),
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[name: 'origin', url: 'https://github.com/kuniaki/docker-kvs.git',credentialsId: '9607f15b-ab8b-478a-8f88-c6fb7e651541']]
+       ])
+
+    }
+
+    //Build Source code and Deploy to the test machine
+    stage('Build') {
+        sh "cat docker-compose.build.yml"
+        sh "docker-compose -f docker-compose.build.yml down"
+        sh "docker volume prune -f"
+        sh "docker-compose -f docker-compose.build.yml build"
+        sh "docker-compose -f docker-compose.build.yml up -d"
+        sh "docker-compose -f docker-compose.build.yml ps"
+    }
+
+    //Execute Unit Test and UI Automation Test in the test machine
+    stage('Unit Test') {
+
+     //Unit Test
+     sh "docker container exec dockerkvs_apptest pytest --junitxml=apptest.xml"
+     sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
+     junit 'apptest.xml'
+
+     test_stage = '2'
+
+     if(env.BRANCH_NAME != 'main' && env.BRANCH_NAME != 'uitest') {
+        stopContainer()
+     }
+    }
+    /*
+  if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'uitest') {
+    stage('UI Test') {
+      sh "docker-compose -f uitest/docker-compose.yml up -d"
+      sh "ls -la uitest/test"
+      sh "pwd"
+      sh "docker exec selenium pwd"
+      sh "docker exec selenium ls -l /test"
+      sh "docker container exec selenium pytest --junitxml=uitest.xml"
+      sh "docker exec selenium pwd"
+      sh "docker exec selenium ls -l"
+      sh "ls -la uitest/test"
+      sh "cp uitest/test/uitest.xml ."
+      junit 'uitest.xml'
+      //post screenshot
+       screenshot()
+      stopContainer()
+      sh "docker-compose -f uitest/docker-compose.yml down" 
+    }
+  }
+    //Upload Application images to Docker Hubs
+  if(env.BRANCH_NAME == 'main') {
+   stage('Register') {
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        println "Credential"
+        println "UserName ${USERNAME}"
+        sh 'docker login -u $USERNAME -p $PASSWORD'
+        sh "docker tag dockerkvs_web $USERNAME/web:$TIME_STAMP"
+        sh "docker tag dockerkvs_app $USERNAME/app:$TIME_STAMP"
+        sh "docker push $USERNAME/web:$TIME_STAMP"
+        sh "docker push $USERNAME/app:$TIME_STAMP"
+        sh "docker logout"
+      }
+    }
+   }
+
+   //Clean up Test machine
+    stage('clear') {
+     deleteImages(TIME_STAMP)
+   }
+*/
+   //Deploy the application images onto production
+  if(env.BRANCH_NAME == 'main') {
+   stage('Deploy') {
+      withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        sh 'docker login -u $USERNAME -p $PASSWORD'
+        sh "cat docker-compose.prod.yml"
+        sh "echo 'DOCKERHUB_USER=$USERNAME' > .env"
+        sh "echo 'BUILD_TIMESTAMP=$TIME_STAMP' >> .env"
+        sh "cat .env"
+
+        //Stop Container
+/*        
+        sh "docker -H ssh://kuniaki@$production rm -f web"
+        sh "docker -H ssh://kuniaki@$production rm -f app"
+        sh "docker -H ssh://kuniaki@$production rm -f dockerkvs_db"
+ //       sh "docker -H ssh://testapp@$production rmi -f \$(docker images -a -q)"
+        sh "docker-compose -H ssh://kuniaki@$production -f docker-compose.prod.yml up -d"
+        sh "docker-compose -H ssh://kuniaki@$production -f docker-compose.prod.yml ps"
+        */
+        
+        sh "docker rm -f web"
+        sh "docker rm -f app"
+        sh "docker rm -f dockerkvs_db"
+ //       sh "docker -H ssh://testapp@$production rmi -f \$(docker images -a -q)"
+        sh "docker-compose -f docker-compose.build.yml up -d"
+        sh "docker-compose -f docker-compose.build.yml ps"
+        
+        sh "docker logout"
+      }
+    }
   }
 
 
-//test11
+  } catch(e) {
+     echo "Catch Error"
+     echo "${test_stage}"
+     test_stage = testReport(test_stage)
+
+     echo "Catch Error 2"
+     echo "${test_stage}"
+
+     if("${test_stage}" == '1') {
+         test_stage = testReport(test_stage)
+     }
+
+    if("${test_stage}" == '2') {
+         test_stage = testReport(test_stage)
+     }
 
 
- stages {
-    stage('Build down') {
-      steps {
-        sh "cat docker-compose.build.yml"
-        sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml down"
-      }
-    }
-    stage('Build volume') {
-      steps {
-        sh "docker -H ssh://${BUILD_HOST} volume prune -f"
-      }
-    }
-    stage('Build build') {
-      steps {
-        sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml build"
-      }
-    }
-    stage('Build up -d') {
-      steps {
-        sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml up -d"
-      }
-    }
-    stage('Build ps') {
-      steps {
-        sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml ps"
-      }
-    }
+     screenshot()
 
-    stage('Test') {
-      steps {
-        sh "docker -H ssh://${BUILD_HOST} container exec dockerkvs_apptest pytest -v test_app.py"
-        sh "docker -H ssh://${BUILD_HOST} container exec dockerkvs_webtest pytest -v test_static.py"
-        sh "docker -H ssh://${BUILD_HOST} container exec dockerkvs_webtest pytest -v test_selenium.py"
-        sh "docker-compose -H ssh://${BUILD_HOST} -f docker-compose.build.yml down"
-      }
-    }
-    stage('Register') {
-      steps {
-        sh "docker -H ssh://${BUILD_HOST} tag dockerkvs_web ${DOCKERHUB_USER}/dockerkvs_web:${BUILD_TIMESTAMP}"
-        sh "docker -H ssh://${BUILD_HOST} tag dockerkvs_app ${DOCKERHUB_USER}/dockerkvs_app:${BUILD_TIMESTAMP}"
-        sh "docker -H ssh://${BUILD_HOST} push ${DOCKERHUB_USER}/dockerkvs_web:${BUILD_TIMESTAMP}"
-        sh "docker -H ssh://${BUILD_HOST} push ${DOCKERHUB_USER}/dockerkvs_app:${BUILD_TIMESTAMP}"
-      }
-    }
-    stage('Deploy') {
-      steps {
-        sh "cat docker-compose.prod.yml"
-        sh "echo 'DOCKERHUB_USER=${DOCKERHUB_USER}' > .env"
-        sh "echo 'BUILD_TIMESTAMP=${BUILD_TIMESTAMP}' >> .env"
-        sh "cat .env"
-        sh "docker-compose -H ssh://${PROD_HOST} -f docker-compose.prod.yml up -d"
-        sh "docker-compose -H ssh://${PROD_HOST} -f docker-compose.prod.yml ps"
-      }
-    }
+     sh "docker-compose -f uitest/docker-compose.yml down" 
+     stopContainer()
+     deleteImages(TIME_STAMP)
+  } }
+
+def stopContainer() {
+    sh "docker-compose -f docker-compose.build.yml down"
+}
+
+def deleteImages(TIME_STAMP) {
+withCredentials([usernamePassword(credentialsId: '5e570ab5-17cb-4740-8393-547b1200e31f', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+  try {
+      sh "docker rmi -f $USERNAME/web:${TIME_STAMP}"
+  }catch(e) {
+      echo " web image is already deleted"
+  }
+
+  try {
+      sh "docker rmi $USERNAME/app:${TIME_STAMP}"
+  } catch(e) {
+      echo " app image is already deleted"
+  }
+  if(env.BRANCH_NAME == 'main') {
+      sh "docker-compose -f uitest/docker-compose.yml down" 
+  }
+  try {
+      sh "docker rmi -f `docker images -q`"
+//    sh "docker rmi -f $(docker images -a -q)"
+  }catch(e) {
+      echo " images is already deleted"
+  }
+ }
+}
+def screenshot() {
+  try {
+    sh "docker exec selenium ls -l /images"
+    sh "docker cp selenium:/images ."
+    archiveArtifacts 'images/*'
+  }catch(e) {
+      echo "No Screenshots "
   }
 }
+
+def testReport(index) {
+
+ echo "testReport Function 0"
+ echo "${index}"
+ def test_stage = '0'
+
+ try
+ {
+    if("${index}" == '1') {
+
+    echo "testReport Function 1"
+    echo "${index}"
+
+     sh "docker cp dockerkvs_apptest:/src/apptest.xml ."
+     junit 'apptest.xml'
+     test_stage = '2'
+     sh "docker container exec dockerkvs_webtest pytest --junitxml=uitest.xml"
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     junit 'uitest.xml'
+     stopContainer()
+     test_stage = '3'
+
+    echo "testReport Function 2"
+    echo "${test_stage}"
+    echo test_Stage
+
+     return test_stage
+    }
+
+
+    if("${index}" == '2') {
+     sh "docker cp dockerkvs_webtest:/src/uitest.xml ."
+     junit 'uitest.xml'
+     test_stage = '3'
+
+     return test_stage
+
+    }
+
+
+  }
+  catch(e)
+  {
+      echo "Catch Error in testRecord function"
+      return test_stage
+  }
+
+}
+
